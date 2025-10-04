@@ -1,0 +1,6 @@
+**/*.pkl
+**/ckpt/
+**/data/
+**/embeddings_cache/
+**/eval/
+**/runs/
