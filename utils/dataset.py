@@ -2,7 +2,11 @@ from sklearn import preprocessing
 import torch
 from myparser import obo_parser, ia_parser
 from graph import Graph
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset,DataLoader
+import os
+import pickle
+from collections import Counter
+from tqdm import tqdm
 
 #taxonomy inputs
 def extract_know(filepath):
@@ -202,3 +206,156 @@ class IndexedStabilitylandscapeDataset(StabilitylandscapeDataset):
     
     def __len__(self):
         return len(self.sequences)
+
+
+# =====================
+# 数据加载和预处理
+# =====================
+def load_datasets(config, onto, label_space):
+    """加载训练和测试数据集"""
+    print("Loading datasets...")
+    train_id, training_sequences, training_labels = preprocess_dataset(
+        config['train_path'], config['MAXLEN'], onto, label_space
+    )
+    test_id, test_sequences, test_labels = preprocess_dataset(
+        config['test_path'], config['MAXLEN'], onto, label_space
+    )
+    
+    print("Train IDs (first 5):", train_id[:5])
+    print("Test IDs (first 5):", test_id[:5])
+    print(f"Total train samples: {len(train_id)}, Total test samples: {len(test_id)}")
+    
+    return train_id, training_sequences, training_labels, test_id, test_sequences, test_labels
+
+# =====================
+# 标签处理
+# =====================
+def process_labels_for_ontology(config, key, label_space, training_labels, test_labels, onto, enc, ia_dict):
+    """处理特定本体的标签"""
+    print(f"\n{'='*50}")
+    print(f"Processing labels for ontology: {key}")
+    print(f"{'='*50}")
+    
+    if config['run_mode'] == "sample":
+        label_processing_cache = os.path.join(config['cache_dir'], f"labels/label_processed_{key}_sample.pkl")
+    elif config['run_mode'] == "full":
+        label_processing_cache = os.path.join(config['cache_dir'], f"labels/label_processed_{key}.pkl")
+    
+    if os.path.exists(label_processing_cache):
+        print(f"Loading preprocessed labels for {key} from cache...")
+        with open(label_processing_cache, 'rb') as f:
+            cached = pickle.load(f)
+        
+        return (cached['label_list'], cached['training_labels_binary'], 
+                cached['test_labels_binary'], cached['encoder'], 
+                cached['ia_list'], cached['onto_parent'], cached['label_num'])
+    
+    print(f"Processing labels for {key} from scratch...")
+    
+    # 筛选高频标签
+    label_tops = Counter(label_space[key])
+    top_labels = sorted([label for label in set(label_space[key]) if label_tops[label] > 21])
+    print(f'Top label numbers: {len(top_labels)}')
+    label_list = top_labels
+    print("Top labels (first 10):", label_list[:10])
+    
+    # 标签编码
+    labspace = enc.fit_transform(label_list)
+    onto_parent = parent(enc, key, label_list, onto, label_space)
+    label_num = len(enc.classes_)
+    print(f'Number of classes: {label_num}')
+    
+    # 转换标签为二进制格式
+    label_set = set(label_list)
+    training_labels_binary = convert_labels_to_binary(training_labels[key], label_set, enc, label_num)
+    test_labels_binary = convert_labels_to_binary(test_labels[key], label_set, enc, label_num)
+    
+    # 构建IA权重矩阵
+    ia_list = build_ia_weight_matrix(ia_dict, label_set, enc, label_num)
+    
+    # 保存处理结果
+    print(f"Saving processed labels to {label_processing_cache}")
+    with open(label_processing_cache, 'wb') as f:
+        pickle.dump({
+            'label_list': label_list,
+            'training_labels_binary': training_labels_binary,
+            'test_labels_binary': test_labels_binary,
+            'encoder': enc,
+            'ia_list': ia_list,
+            'onto_parent': onto_parent,
+            'label_num': label_num,
+        }, f)
+    print("✓ Saved processed labels")
+    
+    return label_list, training_labels_binary, test_labels_binary, enc, ia_list, onto_parent, label_num
+
+def convert_labels_to_binary(labels, label_set, enc, label_num):
+    """将标签转换为二进制格式"""
+    print("Converting labels to binary format...")
+    labels_binary = []
+    for label in tqdm(labels, desc="Processing labels"):
+        filtered_label = [item for item in label if item in label_set]
+        if len(filtered_label) == 0:
+            labels_binary.append([0] * label_num)
+        else:
+            temp_labels = enc.transform(filtered_label)
+            binary_label = [0] * label_num
+            for idx in temp_labels:
+                binary_label[idx] = 1
+            labels_binary.append(binary_label)
+    return labels_binary
+
+
+def build_ia_weight_matrix(ia_dict, label_set, enc, label_num):
+    """构建IA权重矩阵"""
+    print("Building IA weight matrix...")
+    ia_list = torch.ones(1, label_num).cuda()
+    for _tag, _value in ia_dict.items():
+        _tag = _tag[3:]
+        if _tag not in label_set:
+            continue
+        ia_id = enc.transform([_tag])
+        if _value == 0.0:
+            _value = 1.0
+        ia_list[0, ia_id[0]] = _value
+    return ia_list
+
+def verify_alignment(train_esm_embeddings, train_nlp, train_id, test_esm_embeddings, test_nlp, test_id):
+    """验证数据对齐性"""
+    print(f"\nAlignment verification:")
+    print(f"Train samples: ESM={len(train_esm_embeddings)}, NLP={len(train_nlp)}, IDs={len(train_id)}")
+    print(f"Test samples: ESM={len(test_esm_embeddings)}, NLP={len(test_nlp)}, IDs={len(test_id)}")
+    assert len(train_esm_embeddings) == len(train_nlp) == len(train_id), "Train data alignment error!"
+    assert len(test_esm_embeddings) == len(test_nlp) == len(test_id), f"Test data alignment error!"
+
+# =====================
+# 数据集和DataLoader创建
+# =====================
+def create_dataloaders(config, training_sequences, training_labels_binary, train_esm_embeddings, train_nlp,
+                       test_sequences, test_labels_binary, test_esm_embeddings, test_nlp):
+    """创建训练和测试DataLoader"""
+    training_dataset = IndexedStabilitylandscapeDataset(
+        training_sequences, 
+        training_labels_binary, 
+        embeddings=train_esm_embeddings,
+        nlp_embeddings=train_nlp
+    )
+    test_dataset = IndexedStabilitylandscapeDataset(
+        test_sequences, 
+        test_labels_binary, 
+        embeddings=test_esm_embeddings,
+        nlp_embeddings=test_nlp
+    )
+    
+    train_dataloader = DataLoader(
+        training_dataset, 
+        batch_size=config['batch_size_train'], 
+        shuffle=True
+    )
+    test_dataloader = DataLoader(
+        test_dataset, 
+        batch_size=config['batch_size_test'], 
+        shuffle=False
+    )
+    
+    return train_dataloader, test_dataloader

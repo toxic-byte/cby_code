@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from tqdm import tqdm
 
 class ProteinFunctionPredictor(nn.Module):
-    def __init__(self, embed_dim, nlp_dim, label_num, hidden_dim=512):
+    def __init__(self, embed_dim, nlp_dim, label_num, hidden_dim=1024):
         super().__init__()
         
         # 序列分支(主分支,测试时使用)
@@ -91,5 +92,48 @@ class DistillationLoss(nn.Module):
             'kd': loss_kd.item(),
             'feat': loss_feat.item()
         }
+
+def create_model_and_optimizer(config, label_num):
+    """创建模型、损失函数和优化器"""
+    model = ProteinFunctionPredictor(config['embed_dim'], config['nlp_dim'], label_num).cuda()
+    criterion = DistillationLoss(alpha=0.5, beta=0.3, gamma=0.2, temperature=3.0)
+    optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=config['step_size'], gamma=config['gamma'])
+    
+    return model, criterion, optimizer, scheduler
+
+
+def train_one_epoch(model, train_dataloader, criterion, optimizer, epoch, epoch_num, key):
+    """训练一个epoch"""
+    model.train()
+    loss_mean = 0
+    
+    for batch_idx, batch_data in tqdm(enumerate(train_dataloader), 
+                                    desc=f"Epoch {epoch+1}/{epoch_num} Training",
+                                    total=len(train_dataloader)):
+        optimizer.zero_grad()
+        
+        batch_embeddings = batch_data['embedding'].cuda()
+        batch_labels = batch_data['labels'].cuda()
+        batch_nlp = batch_data['nlp_embedding'].cuda()
+        
+        seq_output, fused_output, seq_feat, text_feat = model(
+            batch_embeddings, batch_nlp, mode='train')
+        
+        loss, loss_dict = criterion(
+            seq_output, fused_output, seq_feat, text_feat, batch_labels)
+        
+        loss.backward()
+        optimizer.step()
+        
+        loss_mean += loss.item()
+        
+        if (batch_idx + 1) % 100 == 0:
+            print('{}  Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(
+                key, epoch + 1, epoch_num, batch_idx + 1,
+                len(train_dataloader),
+                loss_mean / (batch_idx + 1)))
+    
+    return loss_mean / len(train_dataloader)
 
 

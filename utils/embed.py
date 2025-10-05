@@ -52,6 +52,22 @@ def precompute_esm_embeddings(sequences, cache_file, pooling='mean'):
     
     return embeddings
 
+def compute_esm_embeddings(config, training_sequences, test_sequences):
+    """预计算ESM embeddings"""
+    print("Computing ESM embeddings...")
+    
+    if config['run_mode'] == "sample":
+        train_esm_cache = os.path.join(config['cache_dir'], "esm/train_esm_embeddings_sample.pkl")
+        test_esm_cache = os.path.join(config['cache_dir'], "esm/test_esm_embeddings_sample.pkl")
+    elif config['run_mode'] == "full":
+        train_esm_cache = os.path.join(config['cache_dir'], "esm/train_esm_embeddings_mean.pkl")
+        test_esm_cache = os.path.join(config['cache_dir'], "esm/test_esm_embeddings_mean.pkl")
+    
+    train_esm_embeddings = precompute_esm_embeddings(training_sequences, train_esm_cache, pooling='mean')
+    test_esm_embeddings = precompute_esm_embeddings(test_sequences, test_esm_cache, pooling='mean')
+    
+    return train_esm_embeddings, test_esm_embeddings
+
 
 # =====================
 # NLP 模型 (BiomedBERT)
@@ -64,6 +80,15 @@ nlp_model.cuda()
 nlp_model.eval()
 
 MAXLEN = 2048
+
+
+def load_nlp_model(nlp_path):
+    """加载NLP模型和tokenizer"""
+    nlp_tokenizer = AutoTokenizer.from_pretrained(nlp_path)
+    nlp_model = AutoModel.from_pretrained(nlp_path)
+    nlp_model.cuda()
+    nlp_model.eval()
+    return nlp_tokenizer, nlp_model
 
 def nlp_embedding(nlp_model, sample_ids, label_list, key, top_list, cache_path=None, onto=None, pooling='mean', name_flag="name"):
     """
@@ -211,3 +236,33 @@ def nlp_embedding(nlp_model, sample_ids, label_list, key, top_list, cache_path=N
         print(f"Embedding shape: {match_embedding.shape}")
     
     return match_embedding
+
+# =====================
+# NLP Embedding处理
+# =====================
+def compute_nlp_embeddings(config, nlp_model, key, train_id, test_id, training_labels, label_list, onto):
+    """计算NLP embeddings"""
+    if config['run_mode'] == "sample":
+        train_nlp_cache = os.path.join(config['cache_dir'], f"nlp/train_nlp_embeddings_{key}_{config['text_mode']}_sample.pkl")
+    elif config['run_mode'] == "full":
+        train_nlp_cache = os.path.join(config['cache_dir'], f"nlp/train_nlp_embeddings_{key}_{config['text_mode']}.pkl")
+    
+    print(f"\n--- Processing Train NLP Embeddings for {key} ---")
+    train_nlp = nlp_embedding(
+        nlp_model, 
+        train_id,
+        training_labels[key], 
+        key, 
+        label_list,
+        cache_path=train_nlp_cache,
+        onto=onto,
+        pooling='mean',
+        name_flag=config['text_mode']
+    )
+    
+    # 测试集使用零向量作为占位符
+    print(f"\n--- Creating placeholder NLP Embeddings for Test Set ---")
+    test_nlp = torch.zeros(len(test_id), config['nlp_dim'])
+    print(f"Test NLP embeddings shape: {test_nlp.shape}")
+    
+    return train_nlp, test_nlp
