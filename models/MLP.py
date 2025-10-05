@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import math
+from tqdm import tqdm
 
 #Classifier
 class Esm_mlp_2(nn.Module):
@@ -14,17 +15,12 @@ class Esm_mlp_2(nn.Module):
         torch.nn.init.kaiming_normal_(self.fc2.weight)
         self.fc2.bias.data.fill_(0.01)
 
-    def forward(self, x):
+    def forward(self, x,mode="train"):
         x = self.fc1(x)
         x = self.relu1(x)
         x = self.fc2(x)
         return x
     
-
-import torch
-import torch.nn as nn
-import math
-
 # Classifier - 3层MLP
 class Esm_mlp_3(nn.Module):
     def __init__(self, input_size, output_size, hidden_size1=None, hidden_size2=None, dropout_rate=0.2):
@@ -56,7 +52,7 @@ class Esm_mlp_3(nn.Module):
         print(f"3-Layer MLP Model: {input_size} -> {hidden_size1} -> {hidden_size2} -> {output_size}")
         print(f"Dropout rate: {dropout_rate}")
 
-    def forward(self, x):
+    def forward(self, x,mode="train"):
         x = self.fc1(x)
         x = self.relu1(x)
         x = self.dropout1(x)
@@ -67,3 +63,4 @@ class Esm_mlp_3(nn.Module):
         
         x = self.fc3(x)
         return x
+    

@@ -1,11 +1,89 @@
 import torch
+import torch.nn as nn   
 from tqdm import tqdm
 from utils.util import calACC, calF, evaluate_annotations
 import os
 from datetime import datetime
-# from models.Text_distill import create_model_and_optimizer,train_one_epoch
-# from models.Text_contrastive import create_model_and_optimizer,train_one_epoch
-from models.MLP import create_model_and_optimizer,train_one_epoch
+from models.MLP import Esm_mlp_2
+
+def create_model_and_optimizer(config, label_num):
+    """创建模型、损失函数和优化器"""
+    model = Esm_mlp_2(
+        config['embed_dim'], 
+        label_num,
+    ).cuda()
+    
+    criterion = nn.BCEWithLogitsLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer, 
+        step_size=config['step_size'], 
+        gamma=config['gamma']
+    )
+
+        # 检查哪些参数会被训练
+    print("Trainable parameters:")
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print(f"{name}: {param.shape}")
+
+    return model, criterion, optimizer, scheduler
+
+
+def train_one_epoch(model, train_dataloader, criterion, optimizer, epoch, epoch_num, key, 
+                    contrastive_weight=0.5):
+    """训练一个epoch"""
+    model.train()
+    loss_mean = 0
+    cls_loss_mean = 0
+    contrastive_loss_mean = 0
+    
+    for batch_idx, batch_data in tqdm(enumerate(train_dataloader), 
+                                    desc=f"Epoch {epoch+1}/{epoch_num} Training",
+                                    total=len(train_dataloader)):
+        optimizer.zero_grad()
+        
+        batch_embeddings = batch_data['embedding'].cuda()
+        batch_labels = batch_data['labels'].cuda()
+        batch_nlp = batch_data['nlp_embedding'].cuda()
+        
+        # 前向传播
+        outputs = model(batch_embeddings,mode="train")
+        
+        # 分类损失
+
+        cls_loss = criterion(outputs, batch_labels)
+        
+        # 总损失
+        loss = cls_loss 
+        
+        loss.backward()
+
+        # 检查梯度是否正常
+        # total_norm = 0
+        # for p in model.parameters():
+        #     if p.grad is not None:
+        #         param_norm = p.grad.data.norm(2)
+        #         total_norm += param_norm.item() ** 2
+        # total_norm = total_norm ** 0.5
+        # print(f'Gradient norm: {total_norm}')
+        
+        optimizer.step()
+        
+        loss_mean += loss.item()
+        cls_loss_mean += cls_loss.item()
+        
+        if (batch_idx + 1) % 100 == 0:
+            print('{}  Epoch [{}/{}], Step [{}/{}], Loss: {:.4f} (Cls: {:.4f}, Contrastive: {:.4f})'.format(
+                key, epoch + 1, epoch_num, batch_idx + 1,
+                len(train_dataloader),
+                loss_mean / (batch_idx + 1),
+                cls_loss_mean / (batch_idx + 1),
+                contrastive_loss_mean / (batch_idx + 1)))
+    
+    return loss_mean / len(train_dataloader),
+
+
 
 
 def validate(model, test_dataloader, ia_list, epoch, epoch_num, key):
@@ -123,7 +201,7 @@ def train_model_for_ontology(config, key, train_dataloader, test_dataloader, lab
             
             ckpt_dir = './ckpt/cafa5/linear'
             os.makedirs(ckpt_dir, exist_ok=True)
-            ckpt_path = os.path.join(ckpt_dir, f"{ctime}main_text_{config['text_mode']}_distill{key}_best.pt")
+            ckpt_path = os.path.join(ckpt_dir, f"{ctime}mlp2_{key}_best.pt")
             torch.save({
                 'epoch': epoch,
                 'model_state_dict': best_model_weights,
@@ -152,12 +230,11 @@ def train_model_for_ontology(config, key, train_dataloader, test_dataloader, lab
 def save_results(config, metrics_output_test, seed, ctime):
     """保存训练结果"""
     os.makedirs(config['output_path'], exist_ok=True)
-    output_file = os.path.join(config['output_path'], f"main_text_{config['text_mode']}_distill{ctime}.txt")
+    output_file = os.path.join(config['output_path'], f"mlp2_{config['text_mode']}{ctime}.txt")
     
     with open(output_file, 'w') as file_prec:
         file_prec.write(f"Training completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         file_prec.write(f"Seed: {seed}\n")
-        file_prec.write(f"Model: main_text_{config['text_mode']}_distill\n")
         file_prec.write(f"Embedding dim: {config['embed_dim']}, Pooling: mean\n")
 
         for key in metrics_output_test.keys():

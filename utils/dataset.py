@@ -200,7 +200,7 @@ class IndexedStabilitylandscapeDataset(StabilitylandscapeDataset):
         
         # 如果有预计算的NLP embeddings,添加到data中
         if self.nlp_embeddings is not None:
-            data['nlp_embedding'] = self.nlp_embeddings[idx]  # [seq_len, nlp_dim]
+            data['nlp_embedding'] = self.nlp_embeddings[idx]  #已经是池化后的[nlp_dim]
         
         return data
     
