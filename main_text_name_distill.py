@@ -2,6 +2,8 @@
 # 每次运行注意修改数据集和esm向量保存的路径、nlp模型路径、标签路径
 # =====================
 import os
+from pdb import run
+from turtle import mode
 os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 os.environ["WANDB_DISABLED"] = "true"
 
@@ -30,11 +32,12 @@ sys.path.append(r"utils")
 sys.path.append(r"models")
 from dataset import obo_graph,preprocess_dataset,parent,IndexedStabilitylandscapeDataset
 from util import calACC,calF,evaluate_annotations
-from Text_name import Text_Name
+from Text_distill import ProteinFunctionPredictor,DistillationLoss
 from trainer import EarlyStopping
 from embed import precompute_esm_embeddings,nlp_embedding
 from transformers import AutoTokenizer, AutoModel
 
+run_mode="full" # sample or full
 
 nlp_path = '/e/cuiby/huggingface/hub/models--microsoft--BiomedNLP-BiomedBERT-base-uncased-abstract/snapshots/d673b8835373c6fa116d6d8006b33d48734e305d'
 nlp_tokenizer = AutoTokenizer.from_pretrained(nlp_path)
@@ -46,10 +49,13 @@ nlp_model.eval()
 #esm模型维度参数
 embed_dim = 640
 
-# train_path = "data/sampled/cafa5_train_10percent.txt"
-train_path = "data/sampled/cafa5_train_100.txt"
-test_path = "data/sampled/cafa5_test_100.txt"
-# test_path = "data/sampled/cafa5_test_10percent.txt"
+if run_mode=="sample":
+    train_path = "data/sampled/cafa5_train_10percent.txt"
+    test_path = "data/sampled/cafa5_test_10percent.txt"
+elif run_mode=="full":
+    train_path = "data/sampled/cafa5_train_100.txt"
+    test_path = "data/sampled/cafa5_test_100.txt"
+
 output_path = "eval/function_linear"
 tax_path = 'data/Original/train_taxonomy.tsv'
 obo_path = 'data/Original/go-basic.obo'
@@ -83,11 +89,12 @@ if __name__ == "__main__":
     print(f"Total train samples: {len(train_id)}, Total test samples: {len(test_id)}")
 
     # 2. 预计算ESM embeddings
-    # train_esm_cache = os.path.join(cache_dir, "train_esm_embeddings_sample.pkl")
-    # test_esm_cache = os.path.join(cache_dir, "test_esm_embeddings_sample.pkl")
-
-    train_esm_cache = os.path.join(cache_dir, "train_esm_embeddings_mean.pkl")
-    test_esm_cache = os.path.join(cache_dir, "test_esm_embeddings_mean.pkl")
+    if  run_mode=="sample":
+        train_esm_cache = os.path.join(cache_dir, "esm/train_esm_embeddings_sample.pkl")
+        test_esm_cache = os.path.join(cache_dir, "esm/test_esm_embeddings_sample.pkl")
+    elif run_mode=="full":
+        train_esm_cache = os.path.join(cache_dir, "esm/train_esm_embeddings_mean.pkl")
+        test_esm_cache = os.path.join(cache_dir, "esm/test_esm_embeddings_mean.pkl")
     
     train_esm_embeddings = precompute_esm_embeddings(training_sequences, train_esm_cache, pooling='mean')
     test_esm_embeddings = precompute_esm_embeddings(test_sequences, test_esm_cache, pooling='mean')
@@ -102,7 +109,10 @@ if __name__ == "__main__":
         print(f"{'='*50}")
         
         # 定义缓存路径
-        label_processing_cache = os.path.join(cache_dir, f"label_processed_{key}.pkl")
+        if run_mode=="sample":
+            label_processing_cache = os.path.join(cache_dir, f"labels/label_processed_{key}_sample.pkl")
+        elif run_mode=="full":
+            label_processing_cache = os.path.join(cache_dir, f"labels/label_processed_{key}.pkl")
         
         if os.path.exists(label_processing_cache):
             print(f"Loading preprocessed labels for {key} from cache...")
@@ -192,7 +202,10 @@ if __name__ == "__main__":
 
         # 4.2 获得 NLP 嵌入(使用缓存和平均池化)
         # 只为训练集生成真实的NLP embeddings
-        train_nlp_cache = os.path.join(cache_dir, f"train_nlp_embeddings_{key}_name.pkl")
+        if run_mode=="sample":
+            train_nlp_cache = os.path.join(cache_dir, f"nlp/train_nlp_embeddings_{key}_def_sample.pkl")
+        elif run_mode=="full":
+            train_nlp_cache = os.path.join(cache_dir, f"nlp/train_nlp_embeddings_{key}_def.pkl")
         
         print(f"\n--- Processing Train NLP Embeddings for {key} ---")
         train_nlp = nlp_embedding(
@@ -204,7 +217,7 @@ if __name__ == "__main__":
             cache_path=train_nlp_cache,
             onto=onto,
             pooling='mean',  # 使用平均池化,
-            name_flag="name"  # 使用GO名称作为文本
+            name_flag="def"  # 使用GO名称作为文本
         )
         
         # 测试集使用零向量作为占位符
@@ -246,10 +259,11 @@ if __name__ == "__main__":
         )
 
         # 4.7 构建模型
-        model_text_name = Text_Name(embed_dim, label_num,nlp_dim).cuda()
+        model_text_distill = ProteinFunctionPredictor(embed_dim, nlp_dim,label_num).cuda()
 
-        criterion = nn.BCELoss()
-        optimizer = torch.optim.Adam(model_text_name.parameters(), lr=4e-5)
+        criterion = DistillationLoss(alpha=0.5, beta=0.3, gamma=0.2, temperature=3.0)
+
+        optimizer = torch.optim.Adam(model_text_distill.parameters(), lr=1e-4)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.6)
         epoch_num = 200
         
@@ -277,7 +291,7 @@ if __name__ == "__main__":
 
         for epoch in range(epoch_num):
             # (1) 训练阶段
-            model_text_name.train()
+            model_text_distill.train()
             loss_mean = 0
             
             for batch_idx, batch_data in tqdm(enumerate(train_dataloader), 
@@ -290,12 +304,14 @@ if __name__ == "__main__":
                 batch_labels = batch_data['labels'].cuda()  # [batch_size, label_num]
                 batch_nlp = batch_data['nlp_embedding'].cuda()  # [batch_size, nlp_dim] - 真实GO文本
                 
-                # 前向传播
-                output = model_text_name(batch_embeddings, batch_nlp)
-                output = sigmoid(output)
-                
+                 # 前向传播
+                seq_output, fused_output, seq_feat, text_feat = model_text_distill(
+                batch_embeddings, batch_nlp, mode='train')
+               
                 # 计算损失
-                loss = criterion(output, batch_labels)
+                loss, loss_dict = criterion(
+                seq_output, fused_output, seq_feat, text_feat, batch_labels)
+                
                 loss.backward()
                 optimizer.step()
                 
@@ -310,7 +326,7 @@ if __name__ == "__main__":
             scheduler.step()
 
             # (2) 验证阶段
-            model_text_name.eval()
+            model_text_distill.eval()
             _labels = []
             _preds = []
             weight_preds = []
@@ -323,7 +339,7 @@ if __name__ == "__main__":
                     batch_labels = batch_data['labels']
                     batch_nlp = batch_data['nlp_embedding'].cuda()  # [batch_size, nlp_dim] - 占位符
                     
-                    output = model_text_name(batch_embeddings, batch_nlp)
+                    output = model_text_distill(batch_embeddings, mode='test')
                     
                     # 加入 IA 权重
                     w_output = output * ia_list
@@ -365,12 +381,12 @@ if __name__ == "__main__":
             # 保存最佳模型
             if f > best_f1:
                 best_f1 = f
-                best_model_weights = model_text_name.state_dict().copy()
+                best_model_weights = model_text_distill.state_dict().copy()
                 optimizer_model_weights = optimizer.state_dict().copy()
                 
                 ckpt_dir = './ckpt/cafa5/linear'
                 os.makedirs(ckpt_dir, exist_ok=True)
-                ckpt_path = os.path.join(ckpt_dir, f"{ctime}Mlp_esm2_t30_150M_UR50D_{key}_best.pt")
+                ckpt_path = os.path.join(ckpt_dir, f"{ctime}main_text_def_distill{key}_best.pt")
                 torch.save({
                     'epoch': epoch,
                     'model_state_dict': best_model_weights,
@@ -386,16 +402,16 @@ if __name__ == "__main__":
                 break
 
         if best_model_weights is not None:
-            model_text_name.load_state_dict(best_model_weights)
+            model_text_distill.load_state_dict(best_model_weights)
             print(f"Loaded best model for {key} with F1: {best_f1:.4f}")
 
     # 保存结果
     os.makedirs(output_path, exist_ok=True)
-    output_file = os.path.join(output_path, f"MLP_esm2_t30_150M_UR50D_{ctime}.txt")
+    output_file = os.path.join(output_path, f"main_text_def_distill{ctime}.txt")
     with open(output_file, 'w') as file_prec:
         file_prec.write(f"Training completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         file_prec.write(f"Seed: {seed}\n")
-        file_prec.write(f"Model: ESM2_t30_150M_UR50D with NLP auxiliary\n")
+        file_prec.write(f"Model: main_text_def_distill\n")
         file_prec.write(f"Embedding dim: {embed_dim}, Pooling: mean\n")
         file_prec.write(f"NLP dim: {nlp_dim}, Test NLP: zeros\n\n")
         

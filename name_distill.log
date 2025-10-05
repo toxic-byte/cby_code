@@ -1,0 +1,645 @@
+nohup: 忽略输入
+Start running date:20251004231049
+Start reading data/sampled/cafa5_train_100.txt
+Read input complete
+Start reading data/sampled/cafa5_test_100.txt
+Read input complete
+Train IDs (first 5): ['Q8BX51', 'Q00711', 'Q97PR0', 'P19624', 'Q9ULX5']
+Test IDs (first 5): ['Q6FG55', 'Q8TBH0', 'Q700C2', 'Q833J1', 'Q15760']
+Total train samples: 128020, Total test samples: 14225
+Loading cached ESM embeddings from embeddings_cache/esm/train_esm_embeddings_mean.pkl
+Loading cached ESM embeddings from embeddings_cache/esm/test_esm_embeddings_mean.pkl
+
+==================================================
+Training for ontology: biological_process
+==================================================
+Loading preprocessed labels for biological_process from cache...
+✓ Loaded cached labels for biological_process, label_num=7644
+
+--- Processing Train NLP Embeddings for biological_process ---
+Loading NLP embeddings from cache: embeddings_cache/nlp/train_nlp_embeddings_biological_process_name.pkl
+Cache loaded successfully. 128020 embeddings loaded.
+
+--- Creating placeholder NLP Embeddings for Test Set ---
+Test NLP embeddings shape: torch.Size([14225, 768])
+
+Alignment verification:
+Train samples: ESM=128020, NLP=128020, IDs=128020
+Test samples: ESM=14225, NLP=14225, IDs=14225
+biological_process  Epoch [1/200], Step [100/501], Loss: 0.4016
+biological_process  Epoch [1/200], Step [200/501], Loss: 0.2763
+biological_process  Epoch [1/200], Step [300/501], Loss: 0.2167
+biological_process  Epoch [1/200], Step [400/501], Loss: 0.1853
+biological_process  Epoch [1/200], Step [500/501], Loss: 0.1691
+biological_process  Epoch: 1, Test w-macro-F1: 53.31%, Test F1:99.55%, Test avg-F1:10.97%, Test weight-F1:99.55%, Test AUPR:3.12%
+Best model saved with F1: 0.1097
+biological_process  Epoch [2/200], Step [100/501], Loss: 0.1271
+biological_process  Epoch [2/200], Step [200/501], Loss: 0.1309
+biological_process  Epoch [2/200], Step [300/501], Loss: 0.1343
+biological_process  Epoch [2/200], Step [400/501], Loss: 0.1376
+biological_process  Epoch [2/200], Step [500/501], Loss: 0.1415
+biological_process  Epoch: 2, Test w-macro-F1: 53.94%, Test F1:99.56%, Test avg-F1:13.24%, Test weight-F1:99.56%, Test AUPR:3.45%
+Best model saved with F1: 0.1324
+biological_process  Epoch [3/200], Step [100/501], Loss: 0.1635
+biological_process  Epoch [3/200], Step [200/501], Loss: 0.1713
+biological_process  Epoch [3/200], Step [300/501], Loss: 0.1812
+biological_process  Epoch [3/200], Step [400/501], Loss: 0.1918
+biological_process  Epoch [3/200], Step [500/501], Loss: 0.2029
+biological_process  Epoch: 3, Test w-macro-F1: 54.36%, Test F1:99.56%, Test avg-F1:14.77%, Test weight-F1:99.56%, Test AUPR:3.86%
+Best model saved with F1: 0.1477
+biological_process  Epoch [4/200], Step [100/501], Loss: 0.2632
+biological_process  Epoch [4/200], Step [200/501], Loss: 0.2673
+biological_process  Epoch [4/200], Step [300/501], Loss: 0.2716
+biological_process  Epoch [4/200], Step [400/501], Loss: 0.2746
+biological_process  Epoch [4/200], Step [500/501], Loss: 0.2796
+biological_process  Epoch: 4, Test w-macro-F1: 54.91%, Test F1:99.57%, Test avg-F1:16.39%, Test weight-F1:99.57%, Test AUPR:4.62%
+Best model saved with F1: 0.1639
+biological_process  Epoch [5/200], Step [100/501], Loss: 0.3044
+biological_process  Epoch [5/200], Step [200/501], Loss: 0.3100
+biological_process  Epoch [5/200], Step [300/501], Loss: 0.3120
+biological_process  Epoch [5/200], Step [400/501], Loss: 0.3142
+biological_process  Epoch [5/200], Step [500/501], Loss: 0.3175
+biological_process  Epoch: 5, Test w-macro-F1: 55.70%, Test F1:99.57%, Test avg-F1:16.41%, Test weight-F1:99.57%, Test AUPR:4.60%
+Best model saved with F1: 0.1641
+biological_process  Epoch [6/200], Step [100/501], Loss: 0.3278
+biological_process  Epoch [6/200], Step [200/501], Loss: 0.3310
+biological_process  Epoch [6/200], Step [300/501], Loss: 0.3324
+biological_process  Epoch [6/200], Step [400/501], Loss: 0.3335
+biological_process  Epoch [6/200], Step [500/501], Loss: 0.3354
+biological_process  Epoch: 6, Test w-macro-F1: 56.17%, Test F1:99.57%, Test avg-F1:16.62%, Test weight-F1:99.57%, Test AUPR:4.43%
+Best model saved with F1: 0.1662
+biological_process  Epoch [7/200], Step [100/501], Loss: 0.3429
+biological_process  Epoch [7/200], Step [200/501], Loss: 0.3436
+biological_process  Epoch [7/200], Step [300/501], Loss: 0.3446
+biological_process  Epoch [7/200], Step [400/501], Loss: 0.3462
+biological_process  Epoch [7/200], Step [500/501], Loss: 0.3469
+biological_process  Epoch: 7, Test w-macro-F1: 56.32%, Test F1:99.57%, Test avg-F1:17.79%, Test weight-F1:99.57%, Test AUPR:4.90%
+Best model saved with F1: 0.1779
+biological_process  Epoch [8/200], Step [100/501], Loss: 0.3499
+biological_process  Epoch [8/200], Step [200/501], Loss: 0.3519
+biological_process  Epoch [8/200], Step [300/501], Loss: 0.3540
+biological_process  Epoch [8/200], Step [400/501], Loss: 0.3556
+biological_process  Epoch [8/200], Step [500/501], Loss: 0.3569
+biological_process  Epoch: 8, Test w-macro-F1: 56.82%, Test F1:99.57%, Test avg-F1:17.15%, Test weight-F1:99.57%, Test AUPR:4.66%
+EarlyStopping counter: 1 out of 10
+biological_process  Epoch [9/200], Step [100/501], Loss: 0.3688
+biological_process  Epoch [9/200], Step [200/501], Loss: 0.3687
+biological_process  Epoch [9/200], Step [300/501], Loss: 0.3687
+biological_process  Epoch [9/200], Step [400/501], Loss: 0.3702
+biological_process  Epoch [9/200], Step [500/501], Loss: 0.3712
+biological_process  Epoch: 9, Test w-macro-F1: 57.03%, Test F1:99.57%, Test avg-F1:17.83%, Test weight-F1:99.57%, Test AUPR:4.68%
+Best model saved with F1: 0.1783
+biological_process  Epoch [10/200], Step [100/501], Loss: 0.3726
+biological_process  Epoch [10/200], Step [200/501], Loss: 0.3751
+biological_process  Epoch [10/200], Step [300/501], Loss: 0.3751
+biological_process  Epoch [10/200], Step [400/501], Loss: 0.3749
+biological_process  Epoch [10/200], Step [500/501], Loss: 0.3752
+biological_process  Epoch: 10, Test w-macro-F1: 57.30%, Test F1:99.57%, Test avg-F1:17.55%, Test weight-F1:99.57%, Test AUPR:4.61%
+EarlyStopping counter: 1 out of 10
+biological_process  Epoch [11/200], Step [100/501], Loss: 0.3799
+biological_process  Epoch [11/200], Step [200/501], Loss: 0.3793
+biological_process  Epoch [11/200], Step [300/501], Loss: 0.3818
+biological_process  Epoch [11/200], Step [400/501], Loss: 0.3821
+biological_process  Epoch [11/200], Step [500/501], Loss: 0.3820
+biological_process  Epoch: 11, Test w-macro-F1: 57.41%, Test F1:99.57%, Test avg-F1:17.87%, Test weight-F1:99.57%, Test AUPR:4.71%
+Best model saved with F1: 0.1787
+biological_process  Epoch [12/200], Step [100/501], Loss: 0.3807
+biological_process  Epoch [12/200], Step [200/501], Loss: 0.3826
+biological_process  Epoch [12/200], Step [300/501], Loss: 0.3847
+biological_process  Epoch [12/200], Step [400/501], Loss: 0.3839
+biological_process  Epoch [12/200], Step [500/501], Loss: 0.3831
+biological_process  Epoch: 12, Test w-macro-F1: 57.29%, Test F1:99.57%, Test avg-F1:19.00%, Test weight-F1:99.57%, Test AUPR:4.91%
+Best model saved with F1: 0.1900
+biological_process  Epoch [13/200], Step [100/501], Loss: 0.3829
+biological_process  Epoch [13/200], Step [200/501], Loss: 0.3835
+biological_process  Epoch [13/200], Step [300/501], Loss: 0.3844
+biological_process  Epoch [13/200], Step [400/501], Loss: 0.3847
+biological_process  Epoch [13/200], Step [500/501], Loss: 0.3846
+biological_process  Epoch: 13, Test w-macro-F1: 57.53%, Test F1:99.57%, Test avg-F1:18.04%, Test weight-F1:99.57%, Test AUPR:4.76%
+EarlyStopping counter: 1 out of 10
+biological_process  Epoch [14/200], Step [100/501], Loss: 0.3846
+biological_process  Epoch [14/200], Step [200/501], Loss: 0.3871
+biological_process  Epoch [14/200], Step [300/501], Loss: 0.3866
+biological_process  Epoch [14/200], Step [400/501], Loss: 0.3856
+biological_process  Epoch [14/200], Step [500/501], Loss: 0.3861
+biological_process  Epoch: 14, Test w-macro-F1: 57.77%, Test F1:99.57%, Test avg-F1:18.28%, Test weight-F1:99.57%, Test AUPR:4.84%
+EarlyStopping counter: 2 out of 10
+biological_process  Epoch [15/200], Step [100/501], Loss: 0.3876
+biological_process  Epoch [15/200], Step [200/501], Loss: 0.3880
+biological_process  Epoch [15/200], Step [300/501], Loss: 0.3869
+biological_process  Epoch [15/200], Step [400/501], Loss: 0.3875
+biological_process  Epoch [15/200], Step [500/501], Loss: 0.3870
+biological_process  Epoch: 15, Test w-macro-F1: 57.94%, Test F1:99.57%, Test avg-F1:18.07%, Test weight-F1:99.57%, Test AUPR:4.84%
+EarlyStopping counter: 3 out of 10
+biological_process  Epoch [16/200], Step [100/501], Loss: 0.3868
+biological_process  Epoch [16/200], Step [200/501], Loss: 0.3861
+biological_process  Epoch [16/200], Step [300/501], Loss: 0.3865
+biological_process  Epoch [16/200], Step [400/501], Loss: 0.3858
+biological_process  Epoch [16/200], Step [500/501], Loss: 0.3863
+biological_process  Epoch: 16, Test w-macro-F1: 57.83%, Test F1:99.57%, Test avg-F1:18.50%, Test weight-F1:99.57%, Test AUPR:4.89%
+EarlyStopping counter: 4 out of 10
+biological_process  Epoch [17/200], Step [100/501], Loss: 0.3901
+biological_process  Epoch [17/200], Step [200/501], Loss: 0.3915
+biological_process  Epoch [17/200], Step [300/501], Loss: 0.3890
+biological_process  Epoch [17/200], Step [400/501], Loss: 0.3867
+biological_process  Epoch [17/200], Step [500/501], Loss: 0.3865
+biological_process  Epoch: 17, Test w-macro-F1: 57.88%, Test F1:99.57%, Test avg-F1:18.52%, Test weight-F1:99.57%, Test AUPR:4.83%
+EarlyStopping counter: 5 out of 10
+biological_process  Epoch [18/200], Step [100/501], Loss: 0.3817
+biological_process  Epoch [18/200], Step [200/501], Loss: 0.3841
+biological_process  Epoch [18/200], Step [300/501], Loss: 0.3850
+biological_process  Epoch [18/200], Step [400/501], Loss: 0.3862
+biological_process  Epoch [18/200], Step [500/501], Loss: 0.3862
+biological_process  Epoch: 18, Test w-macro-F1: 57.89%, Test F1:99.57%, Test avg-F1:18.73%, Test weight-F1:99.57%, Test AUPR:4.87%
+EarlyStopping counter: 6 out of 10
+biological_process  Epoch [19/200], Step [100/501], Loss: 0.3856
+biological_process  Epoch [19/200], Step [200/501], Loss: 0.3858
+biological_process  Epoch [19/200], Step [300/501], Loss: 0.3855
+biological_process  Epoch [19/200], Step [400/501], Loss: 0.3861
+biological_process  Epoch [19/200], Step [500/501], Loss: 0.3865
+biological_process  Epoch: 19, Test w-macro-F1: 57.93%, Test F1:99.57%, Test avg-F1:18.70%, Test weight-F1:99.57%, Test AUPR:4.92%
+EarlyStopping counter: 7 out of 10
+biological_process  Epoch [20/200], Step [100/501], Loss: 0.3868
+biological_process  Epoch [20/200], Step [200/501], Loss: 0.3875
+biological_process  Epoch [20/200], Step [300/501], Loss: 0.3887
+biological_process  Epoch [20/200], Step [400/501], Loss: 0.3888
+biological_process  Epoch [20/200], Step [500/501], Loss: 0.3877
+biological_process  Epoch: 20, Test w-macro-F1: 58.01%, Test F1:99.57%, Test avg-F1:18.45%, Test weight-F1:99.57%, Test AUPR:4.81%
+EarlyStopping counter: 8 out of 10
+biological_process  Epoch [21/200], Step [100/501], Loss: 0.3872
+biological_process  Epoch [21/200], Step [200/501], Loss: 0.3891
+biological_process  Epoch [21/200], Step [300/501], Loss: 0.3891
+biological_process  Epoch [21/200], Step [400/501], Loss: 0.3886
+biological_process  Epoch [21/200], Step [500/501], Loss: 0.3881
+biological_process  Epoch: 21, Test w-macro-F1: 57.97%, Test F1:99.57%, Test avg-F1:18.80%, Test weight-F1:99.57%, Test AUPR:4.92%
+EarlyStopping counter: 9 out of 10
+biological_process  Epoch [22/200], Step [100/501], Loss: 0.3880
+biological_process  Epoch [22/200], Step [200/501], Loss: 0.3867
+biological_process  Epoch [22/200], Step [300/501], Loss: 0.3904
+biological_process  Epoch [22/200], Step [400/501], Loss: 0.3893
+biological_process  Epoch [22/200], Step [500/501], Loss: 0.3884
+biological_process  Epoch: 22, Test w-macro-F1: 58.11%, Test F1:99.57%, Test avg-F1:18.71%, Test weight-F1:99.57%, Test AUPR:4.86%
+EarlyStopping counter: 10 out of 10
+Early stopping triggered at epoch 22
+Loaded best model for biological_process with F1: 0.1900
+
+==================================================
+Training for ontology: molecular_function
+==================================================
+Processing labels for molecular_function from scratch...
+Top label numbers: 1484
+Top labels (first 10): ['0000014', '0000026', '0000030', '0000049', '0000062', '0000099', '0000146', '0000149', '0000155', '0000156']
+Number of classes: 1484
+Converting training labels...
+Converting test labels...
+Building IA weight matrix...
+Saving processed labels to embeddings_cache/labels/label_processed_molecular_function.pkl
+✓ Saved processed labels
+
+--- Processing Train NLP Embeddings for molecular_function ---
+Loading NLP embeddings from cache: embeddings_cache/nlp/train_nlp_embeddings_molecular_function_name.pkl
+Cache loaded successfully. 128020 embeddings loaded.
+
+--- Creating placeholder NLP Embeddings for Test Set ---
+Test NLP embeddings shape: torch.Size([14225, 768])
+
+Alignment verification:
+Train samples: ESM=128020, NLP=128020, IDs=128020
+Test samples: ESM=14225, NLP=14225, IDs=14225
+molecular_function  Epoch [1/200], Step [100/501], Loss: 0.4137
+molecular_function  Epoch [1/200], Step [200/501], Loss: 0.2912
+molecular_function  Epoch [1/200], Step [300/501], Loss: 0.2434
+molecular_function  Epoch [1/200], Step [400/501], Loss: 0.2351
+molecular_function  Epoch [1/200], Step [500/501], Loss: 0.2415
+molecular_function  Epoch: 1, Test w-macro-F1: 58.11%, Test F1:99.61%, Test avg-F1:31.27%, Test weight-F1:99.61%, Test AUPR:24.15%
+Best model saved with F1: 0.3127
+molecular_function  Epoch [2/200], Step [100/501], Loss: 0.2861
+molecular_function  Epoch [2/200], Step [200/501], Loss: 0.2973
+molecular_function  Epoch [2/200], Step [300/501], Loss: 0.3150
+molecular_function  Epoch [2/200], Step [400/501], Loss: 0.3352
+molecular_function  Epoch [2/200], Step [500/501], Loss: 0.3563
+molecular_function  Epoch: 2, Test w-macro-F1: 60.05%, Test F1:99.63%, Test avg-F1:40.35%, Test weight-F1:99.63%, Test AUPR:20.46%
+Best model saved with F1: 0.4035
+molecular_function  Epoch [3/200], Step [100/501], Loss: 0.4885
+molecular_function  Epoch [3/200], Step [200/501], Loss: 0.5183
+molecular_function  Epoch [3/200], Step [300/501], Loss: 0.5387
+molecular_function  Epoch [3/200], Step [400/501], Loss: 0.5591
+molecular_function  Epoch [3/200], Step [500/501], Loss: 0.5778
+molecular_function  Epoch: 3, Test w-macro-F1: 61.83%, Test F1:99.64%, Test avg-F1:48.27%, Test weight-F1:99.64%, Test AUPR:18.92%
+Best model saved with F1: 0.4827
+molecular_function  Epoch [4/200], Step [100/501], Loss: 0.6805
+molecular_function  Epoch [4/200], Step [200/501], Loss: 0.6959
+molecular_function  Epoch [4/200], Step [300/501], Loss: 0.7053
+molecular_function  Epoch [4/200], Step [400/501], Loss: 0.7180
+molecular_function  Epoch [4/200], Step [500/501], Loss: 0.7351
+molecular_function  Epoch: 4, Test w-macro-F1: 62.70%, Test F1:99.65%, Test avg-F1:49.24%, Test weight-F1:99.65%, Test AUPR:48.61%
+Best model saved with F1: 0.4924
+molecular_function  Epoch [5/200], Step [100/501], Loss: 0.8180
+molecular_function  Epoch [5/200], Step [200/501], Loss: 0.8420
+molecular_function  Epoch [5/200], Step [300/501], Loss: 0.8590
+molecular_function  Epoch [5/200], Step [400/501], Loss: 0.8713
+molecular_function  Epoch [5/200], Step [500/501], Loss: 0.8821
+molecular_function  Epoch: 5, Test w-macro-F1: 63.24%, Test F1:99.64%, Test avg-F1:44.98%, Test weight-F1:99.64%, Test AUPR:18.12%
+EarlyStopping counter: 1 out of 10
+molecular_function  Epoch [6/200], Step [100/501], Loss: 0.9559
+molecular_function  Epoch [6/200], Step [200/501], Loss: 0.9681
+molecular_function  Epoch [6/200], Step [300/501], Loss: 0.9764
+molecular_function  Epoch [6/200], Step [400/501], Loss: 0.9821
+molecular_function  Epoch [6/200], Step [500/501], Loss: 0.9906
+molecular_function  Epoch: 6, Test w-macro-F1: 63.95%, Test F1:99.65%, Test avg-F1:49.38%, Test weight-F1:99.65%, Test AUPR:48.59%
+Best model saved with F1: 0.4938
+molecular_function  Epoch [7/200], Step [100/501], Loss: 1.0434
+molecular_function  Epoch [7/200], Step [200/501], Loss: 1.0464
+molecular_function  Epoch [7/200], Step [300/501], Loss: 1.0466
+molecular_function  Epoch [7/200], Step [400/501], Loss: 1.0519
+molecular_function  Epoch [7/200], Step [500/501], Loss: 1.0543
+molecular_function  Epoch: 7, Test w-macro-F1: 64.75%, Test F1:99.65%, Test avg-F1:49.78%, Test weight-F1:99.65%, Test AUPR:48.43%
+Best model saved with F1: 0.4978
+molecular_function  Epoch [8/200], Step [100/501], Loss: 1.0783
+molecular_function  Epoch [8/200], Step [200/501], Loss: 1.0847
+molecular_function  Epoch [8/200], Step [300/501], Loss: 1.0884
+molecular_function  Epoch [8/200], Step [400/501], Loss: 1.0836
+molecular_function  Epoch [8/200], Step [500/501], Loss: 1.0902
+molecular_function  Epoch: 8, Test w-macro-F1: 64.58%, Test F1:99.65%, Test avg-F1:50.47%, Test weight-F1:99.65%, Test AUPR:48.27%
+Best model saved with F1: 0.5047
+molecular_function  Epoch [9/200], Step [100/501], Loss: 1.1146
+molecular_function  Epoch [9/200], Step [200/501], Loss: 1.1074
+molecular_function  Epoch [9/200], Step [300/501], Loss: 1.1062
+molecular_function  Epoch [9/200], Step [400/501], Loss: 1.1077
+molecular_function  Epoch [9/200], Step [500/501], Loss: 1.1105
+molecular_function  Epoch: 9, Test w-macro-F1: 64.67%, Test F1:99.65%, Test avg-F1:50.68%, Test weight-F1:99.65%, Test AUPR:48.05%
+Best model saved with F1: 0.5068
+molecular_function  Epoch [10/200], Step [100/501], Loss: 1.0936
+molecular_function  Epoch [10/200], Step [200/501], Loss: 1.0953
+molecular_function  Epoch [10/200], Step [300/501], Loss: 1.1020
+molecular_function  Epoch [10/200], Step [400/501], Loss: 1.1112
+molecular_function  Epoch [10/200], Step [500/501], Loss: 1.1137
+molecular_function  Epoch: 10, Test w-macro-F1: 65.09%, Test F1:99.65%, Test avg-F1:51.58%, Test weight-F1:99.65%, Test AUPR:47.62%
+Best model saved with F1: 0.5158
+molecular_function  Epoch [11/200], Step [100/501], Loss: 1.1152
+molecular_function  Epoch [11/200], Step [200/501], Loss: 1.1108
+molecular_function  Epoch [11/200], Step [300/501], Loss: 1.1123
+molecular_function  Epoch [11/200], Step [400/501], Loss: 1.1146
+molecular_function  Epoch [11/200], Step [500/501], Loss: 1.1152
+molecular_function  Epoch: 11, Test w-macro-F1: 64.23%, Test F1:99.65%, Test avg-F1:50.60%, Test weight-F1:99.65%, Test AUPR:48.06%
+EarlyStopping counter: 1 out of 10
+molecular_function  Epoch [12/200], Step [100/501], Loss: 1.1287
+molecular_function  Epoch [12/200], Step [200/501], Loss: 1.1322
+molecular_function  Epoch [12/200], Step [300/501], Loss: 1.1245
+molecular_function  Epoch [12/200], Step [400/501], Loss: 1.1234
+molecular_function  Epoch [12/200], Step [500/501], Loss: 1.1257
+molecular_function  Epoch: 12, Test w-macro-F1: 65.00%, Test F1:99.65%, Test avg-F1:51.57%, Test weight-F1:99.65%, Test AUPR:47.63%
+EarlyStopping counter: 2 out of 10
+molecular_function  Epoch [13/200], Step [100/501], Loss: 1.1423
+molecular_function  Epoch [13/200], Step [200/501], Loss: 1.1352
+molecular_function  Epoch [13/200], Step [300/501], Loss: 1.1331
+molecular_function  Epoch [13/200], Step [400/501], Loss: 1.1294
+molecular_function  Epoch [13/200], Step [500/501], Loss: 1.1311
+molecular_function  Epoch: 13, Test w-macro-F1: 64.84%, Test F1:99.65%, Test avg-F1:51.29%, Test weight-F1:99.65%, Test AUPR:47.66%
+EarlyStopping counter: 3 out of 10
+molecular_function  Epoch [14/200], Step [100/501], Loss: 1.1359
+molecular_function  Epoch [14/200], Step [200/501], Loss: 1.1331
+molecular_function  Epoch [14/200], Step [300/501], Loss: 1.1396
+molecular_function  Epoch [14/200], Step [400/501], Loss: 1.1416
+molecular_function  Epoch [14/200], Step [500/501], Loss: 1.1391
+molecular_function  Epoch: 14, Test w-macro-F1: 65.00%, Test F1:99.65%, Test avg-F1:50.06%, Test weight-F1:99.65%, Test AUPR:48.47%
+EarlyStopping counter: 4 out of 10
+molecular_function  Epoch [15/200], Step [100/501], Loss: 1.1333
+molecular_function  Epoch [15/200], Step [200/501], Loss: 1.1360
+molecular_function  Epoch [15/200], Step [300/501], Loss: 1.1373
+molecular_function  Epoch [15/200], Step [400/501], Loss: 1.1320
+molecular_function  Epoch [15/200], Step [500/501], Loss: 1.1302
+molecular_function  Epoch: 15, Test w-macro-F1: 65.43%, Test F1:99.65%, Test avg-F1:50.75%, Test weight-F1:99.65%, Test AUPR:48.14%
+EarlyStopping counter: 5 out of 10
+molecular_function  Epoch [16/200], Step [100/501], Loss: 1.1362
+molecular_function  Epoch [16/200], Step [200/501], Loss: 1.1285
+molecular_function  Epoch [16/200], Step [300/501], Loss: 1.1316
+molecular_function  Epoch [16/200], Step [400/501], Loss: 1.1282
+molecular_function  Epoch [16/200], Step [500/501], Loss: 1.1307
+molecular_function  Epoch: 16, Test w-macro-F1: 65.42%, Test F1:99.65%, Test avg-F1:51.01%, Test weight-F1:99.65%, Test AUPR:47.88%
+EarlyStopping counter: 6 out of 10
+molecular_function  Epoch [17/200], Step [100/501], Loss: 1.1367
+molecular_function  Epoch [17/200], Step [200/501], Loss: 1.1263
+molecular_function  Epoch [17/200], Step [300/501], Loss: 1.1299
+molecular_function  Epoch [17/200], Step [400/501], Loss: 1.1292
+molecular_function  Epoch [17/200], Step [500/501], Loss: 1.1279
+molecular_function  Epoch: 17, Test w-macro-F1: 65.40%, Test F1:99.65%, Test avg-F1:52.55%, Test weight-F1:99.65%, Test AUPR:47.03%
+Best model saved with F1: 0.5255
+molecular_function  Epoch [18/200], Step [100/501], Loss: 1.1353
+molecular_function  Epoch [18/200], Step [200/501], Loss: 1.1265
+molecular_function  Epoch [18/200], Step [300/501], Loss: 1.1292
+molecular_function  Epoch [18/200], Step [400/501], Loss: 1.1261
+molecular_function  Epoch [18/200], Step [500/501], Loss: 1.1277
+molecular_function  Epoch: 18, Test w-macro-F1: 65.50%, Test F1:99.65%, Test avg-F1:51.26%, Test weight-F1:99.65%, Test AUPR:47.89%
+EarlyStopping counter: 1 out of 10
+molecular_function  Epoch [19/200], Step [100/501], Loss: 1.1471
+molecular_function  Epoch [19/200], Step [200/501], Loss: 1.1360
+molecular_function  Epoch [19/200], Step [300/501], Loss: 1.1301
+molecular_function  Epoch [19/200], Step [400/501], Loss: 1.1292
+molecular_function  Epoch [19/200], Step [500/501], Loss: 1.1261
+molecular_function  Epoch: 19, Test w-macro-F1: 65.94%, Test F1:99.65%, Test avg-F1:52.28%, Test weight-F1:99.65%, Test AUPR:47.29%
+EarlyStopping counter: 2 out of 10
+molecular_function  Epoch [20/200], Step [100/501], Loss: 1.1264
+molecular_function  Epoch [20/200], Step [200/501], Loss: 1.1191
+molecular_function  Epoch [20/200], Step [300/501], Loss: 1.1135
+molecular_function  Epoch [20/200], Step [400/501], Loss: 1.1138
+molecular_function  Epoch [20/200], Step [500/501], Loss: 1.1187
+molecular_function  Epoch: 20, Test w-macro-F1: 65.90%, Test F1:99.65%, Test avg-F1:51.54%, Test weight-F1:99.65%, Test AUPR:47.62%
+EarlyStopping counter: 3 out of 10
+molecular_function  Epoch [21/200], Step [100/501], Loss: 1.1303
+molecular_function  Epoch [21/200], Step [200/501], Loss: 1.1275
+molecular_function  Epoch [21/200], Step [300/501], Loss: 1.1326
+molecular_function  Epoch [21/200], Step [400/501], Loss: 1.1316
+molecular_function  Epoch [21/200], Step [500/501], Loss: 1.1252
+molecular_function  Epoch: 21, Test w-macro-F1: 65.90%, Test F1:99.65%, Test avg-F1:51.63%, Test weight-F1:99.65%, Test AUPR:47.58%
+EarlyStopping counter: 4 out of 10
+molecular_function  Epoch [22/200], Step [100/501], Loss: 1.1061
+molecular_function  Epoch [22/200], Step [200/501], Loss: 1.1137
+molecular_function  Epoch [22/200], Step [300/501], Loss: 1.1181
+molecular_function  Epoch [22/200], Step [400/501], Loss: 1.1173
+molecular_function  Epoch [22/200], Step [500/501], Loss: 1.1177
+molecular_function  Epoch: 22, Test w-macro-F1: 66.20%, Test F1:99.65%, Test avg-F1:51.83%, Test weight-F1:99.65%, Test AUPR:47.54%
+EarlyStopping counter: 5 out of 10
+molecular_function  Epoch [23/200], Step [100/501], Loss: 1.1116
+molecular_function  Epoch [23/200], Step [200/501], Loss: 1.1131
+molecular_function  Epoch [23/200], Step [300/501], Loss: 1.1140
+molecular_function  Epoch [23/200], Step [400/501], Loss: 1.1156
+molecular_function  Epoch [23/200], Step [500/501], Loss: 1.1170
+molecular_function  Epoch: 23, Test w-macro-F1: 66.06%, Test F1:99.65%, Test avg-F1:52.43%, Test weight-F1:99.65%, Test AUPR:47.23%
+EarlyStopping counter: 6 out of 10
+molecular_function  Epoch [24/200], Step [100/501], Loss: 1.1073
+molecular_function  Epoch [24/200], Step [200/501], Loss: 1.1167
+molecular_function  Epoch [24/200], Step [300/501], Loss: 1.1161
+molecular_function  Epoch [24/200], Step [400/501], Loss: 1.1146
+molecular_function  Epoch [24/200], Step [500/501], Loss: 1.1140
+molecular_function  Epoch: 24, Test w-macro-F1: 66.15%, Test F1:99.65%, Test avg-F1:51.77%, Test weight-F1:99.65%, Test AUPR:47.44%
+EarlyStopping counter: 7 out of 10
+molecular_function  Epoch [25/200], Step [100/501], Loss: 1.1055
+molecular_function  Epoch [25/200], Step [200/501], Loss: 1.1103
+molecular_function  Epoch [25/200], Step [300/501], Loss: 1.1097
+molecular_function  Epoch [25/200], Step [400/501], Loss: 1.1085
+molecular_function  Epoch [25/200], Step [500/501], Loss: 1.1087
+molecular_function  Epoch: 25, Test w-macro-F1: 66.06%, Test F1:99.65%, Test avg-F1:52.76%, Test weight-F1:99.65%, Test AUPR:47.06%
+Best model saved with F1: 0.5276
+molecular_function  Epoch [26/200], Step [100/501], Loss: 1.1100
+molecular_function  Epoch [26/200], Step [200/501], Loss: 1.1074
+molecular_function  Epoch [26/200], Step [300/501], Loss: 1.1069
+molecular_function  Epoch [26/200], Step [400/501], Loss: 1.1066
+molecular_function  Epoch [26/200], Step [500/501], Loss: 1.1063
+molecular_function  Epoch: 26, Test w-macro-F1: 66.26%, Test F1:99.65%, Test avg-F1:51.79%, Test weight-F1:99.65%, Test AUPR:47.57%
+EarlyStopping counter: 1 out of 10
+molecular_function  Epoch [27/200], Step [100/501], Loss: 1.0919
+molecular_function  Epoch [27/200], Step [200/501], Loss: 1.0913
+molecular_function  Epoch [27/200], Step [300/501], Loss: 1.0904
+molecular_function  Epoch [27/200], Step [400/501], Loss: 1.0951
+molecular_function  Epoch [27/200], Step [500/501], Loss: 1.0988
+molecular_function  Epoch: 27, Test w-macro-F1: 66.17%, Test F1:99.65%, Test avg-F1:51.72%, Test weight-F1:99.65%, Test AUPR:47.62%
+EarlyStopping counter: 2 out of 10
+molecular_function  Epoch [28/200], Step [100/501], Loss: 1.1002
+molecular_function  Epoch [28/200], Step [200/501], Loss: 1.1036
+molecular_function  Epoch [28/200], Step [300/501], Loss: 1.1027
+molecular_function  Epoch [28/200], Step [400/501], Loss: 1.1024
+molecular_function  Epoch [28/200], Step [500/501], Loss: 1.1028
+molecular_function  Epoch: 28, Test w-macro-F1: 66.26%, Test F1:99.65%, Test avg-F1:51.59%, Test weight-F1:99.65%, Test AUPR:47.75%
+EarlyStopping counter: 3 out of 10
+molecular_function  Epoch [29/200], Step [100/501], Loss: 1.0928
+molecular_function  Epoch [29/200], Step [200/501], Loss: 1.1035
+molecular_function  Epoch [29/200], Step [300/501], Loss: 1.1040
+molecular_function  Epoch [29/200], Step [400/501], Loss: 1.1005
+molecular_function  Epoch [29/200], Step [500/501], Loss: 1.0995
+molecular_function  Epoch: 29, Test w-macro-F1: 66.36%, Test F1:99.65%, Test avg-F1:51.91%, Test weight-F1:99.65%, Test AUPR:47.53%
+EarlyStopping counter: 4 out of 10
+molecular_function  Epoch [30/200], Step [100/501], Loss: 1.0877
+molecular_function  Epoch [30/200], Step [200/501], Loss: 1.0923
+molecular_function  Epoch [30/200], Step [300/501], Loss: 1.0897
+molecular_function  Epoch [30/200], Step [400/501], Loss: 1.0928
+molecular_function  Epoch [30/200], Step [500/501], Loss: 1.0943
+molecular_function  Epoch: 30, Test w-macro-F1: 66.33%, Test F1:99.65%, Test avg-F1:52.15%, Test weight-F1:99.65%, Test AUPR:47.29%
+EarlyStopping counter: 5 out of 10
+molecular_function  Epoch [31/200], Step [100/501], Loss: 1.0718
+molecular_function  Epoch [31/200], Step [200/501], Loss: 1.0849
+molecular_function  Epoch [31/200], Step [300/501], Loss: 1.0894
+molecular_function  Epoch [31/200], Step [400/501], Loss: 1.0892
+molecular_function  Epoch [31/200], Step [500/501], Loss: 1.0898
+molecular_function  Epoch: 31, Test w-macro-F1: 66.23%, Test F1:99.65%, Test avg-F1:52.42%, Test weight-F1:99.65%, Test AUPR:47.16%
+EarlyStopping counter: 6 out of 10
+molecular_function  Epoch [32/200], Step [100/501], Loss: 1.1015
+molecular_function  Epoch [32/200], Step [200/501], Loss: 1.0948
+molecular_function  Epoch [32/200], Step [300/501], Loss: 1.0908
+molecular_function  Epoch [32/200], Step [400/501], Loss: 1.0903
+molecular_function  Epoch [32/200], Step [500/501], Loss: 1.0919
+molecular_function  Epoch: 32, Test w-macro-F1: 66.37%, Test F1:99.65%, Test avg-F1:52.21%, Test weight-F1:99.65%, Test AUPR:47.41%
+EarlyStopping counter: 7 out of 10
+molecular_function  Epoch [33/200], Step [100/501], Loss: 1.0871
+molecular_function  Epoch [33/200], Step [200/501], Loss: 1.0933
+molecular_function  Epoch [33/200], Step [300/501], Loss: 1.0910
+molecular_function  Epoch [33/200], Step [400/501], Loss: 1.0921
+molecular_function  Epoch [33/200], Step [500/501], Loss: 1.0904
+molecular_function  Epoch: 33, Test w-macro-F1: 66.42%, Test F1:99.65%, Test avg-F1:52.28%, Test weight-F1:99.65%, Test AUPR:47.27%
+EarlyStopping counter: 8 out of 10
+molecular_function  Epoch [34/200], Step [100/501], Loss: 1.0978
+molecular_function  Epoch [34/200], Step [200/501], Loss: 1.0927
+molecular_function  Epoch [34/200], Step [300/501], Loss: 1.0885
+molecular_function  Epoch [34/200], Step [400/501], Loss: 1.0883
+molecular_function  Epoch [34/200], Step [500/501], Loss: 1.0872
+molecular_function  Epoch: 34, Test w-macro-F1: 66.36%, Test F1:99.65%, Test avg-F1:52.14%, Test weight-F1:99.65%, Test AUPR:47.51%
+EarlyStopping counter: 9 out of 10
+molecular_function  Epoch [35/200], Step [100/501], Loss: 1.0867
+molecular_function  Epoch [35/200], Step [200/501], Loss: 1.0938
+molecular_function  Epoch [35/200], Step [300/501], Loss: 1.0947
+molecular_function  Epoch [35/200], Step [400/501], Loss: 1.0929
+molecular_function  Epoch [35/200], Step [500/501], Loss: 1.0873
+molecular_function  Epoch: 35, Test w-macro-F1: 66.42%, Test F1:99.65%, Test avg-F1:51.62%, Test weight-F1:99.65%, Test AUPR:47.86%
+EarlyStopping counter: 10 out of 10
+Early stopping triggered at epoch 35
+Loaded best model for molecular_function with F1: 0.5276
+
+==================================================
+Training for ontology: cellular_component
+==================================================
+Processing labels for cellular_component from scratch...
+Top label numbers: 1025
+Top labels (first 10): ['0000109', '0000118', '0000120', '0000123', '0000124', '0000131', '0000137', '0000138', '0000139', '0000145']
+Number of classes: 1025
+Converting training labels...
+Converting test labels...
+Building IA weight matrix...
+Saving processed labels to embeddings_cache/labels/label_processed_cellular_component.pkl
+✓ Saved processed labels
+
+--- Processing Train NLP Embeddings for cellular_component ---
+Loading NLP embeddings from cache: embeddings_cache/nlp/train_nlp_embeddings_cellular_component_name.pkl
+Cache loaded successfully. 128020 embeddings loaded.
+
+--- Creating placeholder NLP Embeddings for Test Set ---
+Test NLP embeddings shape: torch.Size([14225, 768])
+
+Alignment verification:
+Train samples: ESM=128020, NLP=128020, IDs=128020
+Test samples: ESM=14225, NLP=14225, IDs=14225
+cellular_component  Epoch [1/200], Step [100/501], Loss: 0.4475
+cellular_component  Epoch [1/200], Step [200/501], Loss: 0.3205
+cellular_component  Epoch [1/200], Step [300/501], Loss: 0.2697
+cellular_component  Epoch [1/200], Step [400/501], Loss: 0.2534
+cellular_component  Epoch [1/200], Step [500/501], Loss: 0.2525
+cellular_component  Epoch: 1, Test w-macro-F1: 63.58%, Test F1:99.09%, Test avg-F1:45.19%, Test weight-F1:99.09%, Test AUPR:14.42%
+Best model saved with F1: 0.4519
+cellular_component  Epoch [2/200], Step [100/501], Loss: 0.2903
+cellular_component  Epoch [2/200], Step [200/501], Loss: 0.3029
+cellular_component  Epoch [2/200], Step [300/501], Loss: 0.3109
+cellular_component  Epoch [2/200], Step [400/501], Loss: 0.3163
+cellular_component  Epoch [2/200], Step [500/501], Loss: 0.3220
+cellular_component  Epoch: 2, Test w-macro-F1: 66.70%, Test F1:99.20%, Test avg-F1:56.34%, Test weight-F1:99.20%, Test AUPR:21.31%
+Best model saved with F1: 0.5634
+cellular_component  Epoch [3/200], Step [100/501], Loss: 0.3638
+cellular_component  Epoch [3/200], Step [200/501], Loss: 0.3722
+cellular_component  Epoch [3/200], Step [300/501], Loss: 0.3808
+cellular_component  Epoch [3/200], Step [400/501], Loss: 0.3880
+cellular_component  Epoch [3/200], Step [500/501], Loss: 0.3931
+cellular_component  Epoch: 3, Test w-macro-F1: 67.28%, Test F1:99.21%, Test avg-F1:58.38%, Test weight-F1:99.21%, Test AUPR:22.29%
+Best model saved with F1: 0.5838
+cellular_component  Epoch [4/200], Step [100/501], Loss: 0.4186
+cellular_component  Epoch [4/200], Step [200/501], Loss: 0.4278
+cellular_component  Epoch [4/200], Step [300/501], Loss: 0.4307
+cellular_component  Epoch [4/200], Step [400/501], Loss: 0.4358
+cellular_component  Epoch [4/200], Step [500/501], Loss: 0.4413
+cellular_component  Epoch: 4, Test w-macro-F1: 68.00%, Test F1:99.23%, Test avg-F1:59.72%, Test weight-F1:99.23%, Test AUPR:22.75%
+Best model saved with F1: 0.5972
+cellular_component  Epoch [5/200], Step [100/501], Loss: 0.4649
+cellular_component  Epoch [5/200], Step [200/501], Loss: 0.4726
+cellular_component  Epoch [5/200], Step [300/501], Loss: 0.4798
+cellular_component  Epoch [5/200], Step [400/501], Loss: 0.4855
+cellular_component  Epoch [5/200], Step [500/501], Loss: 0.4897
+cellular_component  Epoch: 5, Test w-macro-F1: 68.54%, Test F1:99.23%, Test avg-F1:60.18%, Test weight-F1:99.23%, Test AUPR:21.78%
+Best model saved with F1: 0.6018
+cellular_component  Epoch [6/200], Step [100/501], Loss: 0.5240
+cellular_component  Epoch [6/200], Step [200/501], Loss: 0.5207
+cellular_component  Epoch [6/200], Step [300/501], Loss: 0.5219
+cellular_component  Epoch [6/200], Step [400/501], Loss: 0.5249
+cellular_component  Epoch [6/200], Step [500/501], Loss: 0.5272
+cellular_component  Epoch: 6, Test w-macro-F1: 68.19%, Test F1:99.22%, Test avg-F1:58.55%, Test weight-F1:99.22%, Test AUPR:20.88%
+EarlyStopping counter: 1 out of 10
+cellular_component  Epoch [7/200], Step [100/501], Loss: 0.5455
+cellular_component  Epoch [7/200], Step [200/501], Loss: 0.5480
+cellular_component  Epoch [7/200], Step [300/501], Loss: 0.5498
+cellular_component  Epoch [7/200], Step [400/501], Loss: 0.5518
+cellular_component  Epoch [7/200], Step [500/501], Loss: 0.5551
+cellular_component  Epoch: 7, Test w-macro-F1: 68.45%, Test F1:99.23%, Test avg-F1:59.02%, Test weight-F1:99.23%, Test AUPR:21.17%
+EarlyStopping counter: 2 out of 10
+cellular_component  Epoch [8/200], Step [100/501], Loss: 0.5670
+cellular_component  Epoch [8/200], Step [200/501], Loss: 0.5731
+cellular_component  Epoch [8/200], Step [300/501], Loss: 0.5748
+cellular_component  Epoch [8/200], Step [400/501], Loss: 0.5737
+cellular_component  Epoch [8/200], Step [500/501], Loss: 0.5758
+cellular_component  Epoch: 8, Test w-macro-F1: 68.36%, Test F1:99.23%, Test avg-F1:59.33%, Test weight-F1:99.23%, Test AUPR:21.35%
+EarlyStopping counter: 3 out of 10
+cellular_component  Epoch [9/200], Step [100/501], Loss: 0.5857
+cellular_component  Epoch [9/200], Step [200/501], Loss: 0.5888
+cellular_component  Epoch [9/200], Step [300/501], Loss: 0.5888
+cellular_component  Epoch [9/200], Step [400/501], Loss: 0.5895
+cellular_component  Epoch [9/200], Step [500/501], Loss: 0.5911
+cellular_component  Epoch: 9, Test w-macro-F1: 68.54%, Test F1:99.23%, Test avg-F1:59.92%, Test weight-F1:99.23%, Test AUPR:21.86%
+EarlyStopping counter: 4 out of 10
+cellular_component  Epoch [10/200], Step [100/501], Loss: 0.6065
+cellular_component  Epoch [10/200], Step [200/501], Loss: 0.5995
+cellular_component  Epoch [10/200], Step [300/501], Loss: 0.6036
+cellular_component  Epoch [10/200], Step [400/501], Loss: 0.6077
+cellular_component  Epoch [10/200], Step [500/501], Loss: 0.6092
+cellular_component  Epoch: 10, Test w-macro-F1: 68.44%, Test F1:99.23%, Test avg-F1:59.47%, Test weight-F1:99.23%, Test AUPR:21.32%
+EarlyStopping counter: 5 out of 10
+cellular_component  Epoch [11/200], Step [100/501], Loss: 0.6149
+cellular_component  Epoch [11/200], Step [200/501], Loss: 0.6188
+cellular_component  Epoch [11/200], Step [300/501], Loss: 0.6181
+cellular_component  Epoch [11/200], Step [400/501], Loss: 0.6188
+cellular_component  Epoch [11/200], Step [500/501], Loss: 0.6205
+cellular_component  Epoch: 11, Test w-macro-F1: 68.71%, Test F1:99.24%, Test avg-F1:60.49%, Test weight-F1:99.24%, Test AUPR:22.16%
+Best model saved with F1: 0.6049
+cellular_component  Epoch [12/200], Step [100/501], Loss: 0.6286
+cellular_component  Epoch [12/200], Step [200/501], Loss: 0.6274
+cellular_component  Epoch [12/200], Step [300/501], Loss: 0.6287
+cellular_component  Epoch [12/200], Step [400/501], Loss: 0.6297
+cellular_component  Epoch [12/200], Step [500/501], Loss: 0.6307
+cellular_component  Epoch: 12, Test w-macro-F1: 68.87%, Test F1:99.24%, Test avg-F1:60.70%, Test weight-F1:99.24%, Test AUPR:22.31%
+Best model saved with F1: 0.6070
+cellular_component  Epoch [13/200], Step [100/501], Loss: 0.6351
+cellular_component  Epoch [13/200], Step [200/501], Loss: 0.6343
+cellular_component  Epoch [13/200], Step [300/501], Loss: 0.6326
+cellular_component  Epoch [13/200], Step [400/501], Loss: 0.6330
+cellular_component  Epoch [13/200], Step [500/501], Loss: 0.6343
+cellular_component  Epoch: 13, Test w-macro-F1: 68.91%, Test F1:99.25%, Test avg-F1:61.33%, Test weight-F1:99.25%, Test AUPR:22.84%
+Best model saved with F1: 0.6133
+cellular_component  Epoch [14/200], Step [100/501], Loss: 0.6608
+cellular_component  Epoch [14/200], Step [200/501], Loss: 0.6538
+cellular_component  Epoch [14/200], Step [300/501], Loss: 0.6497
+cellular_component  Epoch [14/200], Step [400/501], Loss: 0.6461
+cellular_component  Epoch [14/200], Step [500/501], Loss: 0.6454
+cellular_component  Epoch: 14, Test w-macro-F1: 68.90%, Test F1:99.24%, Test avg-F1:60.66%, Test weight-F1:99.24%, Test AUPR:21.93%
+EarlyStopping counter: 1 out of 10
+cellular_component  Epoch [15/200], Step [100/501], Loss: 0.6506
+cellular_component  Epoch [15/200], Step [200/501], Loss: 0.6452
+cellular_component  Epoch [15/200], Step [300/501], Loss: 0.6458
+cellular_component  Epoch [15/200], Step [400/501], Loss: 0.6471
+cellular_component  Epoch [15/200], Step [500/501], Loss: 0.6483
+cellular_component  Epoch: 15, Test w-macro-F1: 69.05%, Test F1:99.24%, Test avg-F1:61.04%, Test weight-F1:99.24%, Test AUPR:22.14%
+EarlyStopping counter: 2 out of 10
+cellular_component  Epoch [16/200], Step [100/501], Loss: 0.6512
+cellular_component  Epoch [16/200], Step [200/501], Loss: 0.6532
+cellular_component  Epoch [16/200], Step [300/501], Loss: 0.6513
+cellular_component  Epoch [16/200], Step [400/501], Loss: 0.6517
+cellular_component  Epoch [16/200], Step [500/501], Loss: 0.6518
+cellular_component  Epoch: 16, Test w-macro-F1: 68.80%, Test F1:99.24%, Test avg-F1:60.18%, Test weight-F1:99.24%, Test AUPR:21.50%
+EarlyStopping counter: 3 out of 10
+cellular_component  Epoch [17/200], Step [100/501], Loss: 0.6532
+cellular_component  Epoch [17/200], Step [200/501], Loss: 0.6513
+cellular_component  Epoch [17/200], Step [300/501], Loss: 0.6497
+cellular_component  Epoch [17/200], Step [400/501], Loss: 0.6522
+cellular_component  Epoch [17/200], Step [500/501], Loss: 0.6525
+cellular_component  Epoch: 17, Test w-macro-F1: 68.88%, Test F1:99.24%, Test avg-F1:60.43%, Test weight-F1:99.24%, Test AUPR:21.75%
+EarlyStopping counter: 4 out of 10
+cellular_component  Epoch [18/200], Step [100/501], Loss: 0.6536
+cellular_component  Epoch [18/200], Step [200/501], Loss: 0.6524
+cellular_component  Epoch [18/200], Step [300/501], Loss: 0.6547
+cellular_component  Epoch [18/200], Step [400/501], Loss: 0.6544
+cellular_component  Epoch [18/200], Step [500/501], Loss: 0.6538
+cellular_component  Epoch: 18, Test w-macro-F1: 68.99%, Test F1:99.24%, Test avg-F1:60.70%, Test weight-F1:99.24%, Test AUPR:21.81%
+EarlyStopping counter: 5 out of 10
+cellular_component  Epoch [19/200], Step [100/501], Loss: 0.6583
+cellular_component  Epoch [19/200], Step [200/501], Loss: 0.6545
+cellular_component  Epoch [19/200], Step [300/501], Loss: 0.6530
+cellular_component  Epoch [19/200], Step [400/501], Loss: 0.6548
+cellular_component  Epoch [19/200], Step [500/501], Loss: 0.6565
+cellular_component  Epoch: 19, Test w-macro-F1: 68.99%, Test F1:99.24%, Test avg-F1:60.75%, Test weight-F1:99.24%, Test AUPR:21.97%
+EarlyStopping counter: 6 out of 10
+cellular_component  Epoch [20/200], Step [100/501], Loss: 0.6570
+cellular_component  Epoch [20/200], Step [200/501], Loss: 0.6570
+cellular_component  Epoch [20/200], Step [300/501], Loss: 0.6590
+cellular_component  Epoch [20/200], Step [400/501], Loss: 0.6579
+cellular_component  Epoch [20/200], Step [500/501], Loss: 0.6585
+cellular_component  Epoch: 20, Test w-macro-F1: 69.10%, Test F1:99.24%, Test avg-F1:60.95%, Test weight-F1:99.24%, Test AUPR:22.06%
+EarlyStopping counter: 7 out of 10
+cellular_component  Epoch [21/200], Step [100/501], Loss: 0.6604
+cellular_component  Epoch [21/200], Step [200/501], Loss: 0.6602
+cellular_component  Epoch [21/200], Step [300/501], Loss: 0.6592
+cellular_component  Epoch [21/200], Step [400/501], Loss: 0.6593
+cellular_component  Epoch [21/200], Step [500/501], Loss: 0.6583
+cellular_component  Epoch: 21, Test w-macro-F1: 69.06%, Test F1:99.24%, Test avg-F1:60.72%, Test weight-F1:99.24%, Test AUPR:22.04%
+EarlyStopping counter: 8 out of 10
+cellular_component  Epoch [22/200], Step [100/501], Loss: 0.6694
+cellular_component  Epoch [22/200], Step [200/501], Loss: 0.6650
+cellular_component  Epoch [22/200], Step [300/501], Loss: 0.6621
+cellular_component  Epoch [22/200], Step [400/501], Loss: 0.6604
+cellular_component  Epoch [22/200], Step [500/501], Loss: 0.6588
+cellular_component  Epoch: 22, Test w-macro-F1: 69.08%, Test F1:99.24%, Test avg-F1:60.77%, Test weight-F1:99.24%, Test AUPR:22.24%
+EarlyStopping counter: 9 out of 10
+cellular_component  Epoch [23/200], Step [100/501], Loss: 0.6537
+cellular_component  Epoch [23/200], Step [200/501], Loss: 0.6567
+cellular_component  Epoch [23/200], Step [300/501], Loss: 0.6612
+cellular_component  Epoch [23/200], Step [400/501], Loss: 0.6610
+cellular_component  Epoch [23/200], Step [500/501], Loss: 0.6606
+cellular_component  Epoch: 23, Test w-macro-F1: 69.13%, Test F1:99.24%, Test avg-F1:61.10%, Test weight-F1:99.24%, Test AUPR:21.86%
+EarlyStopping counter: 10 out of 10
+Early stopping triggered at epoch 23
+Loaded best model for cellular_component with F1: 0.6133
+
+Training completed! Results saved to: eval/function_linear/main_text_name_distill20251004231049.txt
+End running date:20251005011923
