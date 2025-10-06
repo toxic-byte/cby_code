@@ -12,7 +12,8 @@ sys.path.append(r"trainer")
 from dataset import obo_graph,load_datasets,verify_alignment,process_labels_for_ontology,create_dataloaders
 from config import setup_environment, get_config
 from embed import load_nlp_model,compute_esm_embeddings,compute_nlp_embeddings
-from trainer_MLP import train_model_for_ontology,save_results
+# from trainer_MLP import train_model_for_ontology,save_results
+from trainer_text_modify import train_model_for_ontology,save_results
 
 
 def main():

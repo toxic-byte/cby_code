@@ -266,3 +266,40 @@ def compute_nlp_embeddings(config, nlp_model, key, train_id, test_id, training_l
     print(f"Test NLP embeddings shape: {test_nlp.shape}")
     
     return train_nlp, test_nlp
+
+def compute_nlp_embeddings_with_test(config, nlp_model, key, train_id, test_id, training_labels,test_labels, label_list, onto):
+    """计算NLP embeddings"""
+    if config['run_mode'] == "sample":
+        train_nlp_cache = os.path.join(config['cache_dir'], f"nlp/train_nlp_embeddings_{key}_{config['text_mode']}_sample.pkl")
+        test_nlp_cache = os.path.join(config['cache_dir'], f"nlp/test_nlp_embeddings_{key}_{config['text_mode']}_sample.pkl")
+    elif config['run_mode'] == "full":
+        train_nlp_cache = os.path.join(config['cache_dir'], f"nlp/train_nlp_embeddings_{key}_{config['text_mode']}.pkl")
+        test_nlp_cache = os.path.join(config['cache_dir'], f"nlp/test_nlp_embeddings_{key}_{config['text_mode']}.pkl")
+    
+    print(f"\n--- Processing Train NLP Embeddings for {key} ---")
+    train_nlp = nlp_embedding(
+        nlp_model, 
+        train_id,
+        training_labels[key], 
+        key, 
+        label_list,
+        cache_path=train_nlp_cache,
+        onto=onto,
+        pooling='mean',
+        name_flag=config['text_mode']
+    )
+
+    test_nlp = nlp_embedding(
+        nlp_model, 
+        test_id,
+        test_labels[key], 
+        key, 
+        label_list,
+        cache_path=test_nlp_cache,
+        onto=onto,
+        pooling='mean',
+        name_flag=config['text_mode']
+    )
+
+    
+    return train_nlp, test_nlp

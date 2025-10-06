@@ -7,6 +7,7 @@ import os
 import pickle
 from collections import Counter
 from tqdm import tqdm
+import numpy as np
 
 #taxonomy inputs
 def extract_know(filepath):
@@ -305,6 +306,55 @@ def convert_labels_to_binary(labels, label_set, enc, label_num):
             labels_binary.append(binary_label)
     return labels_binary
 
+def to_label_tensor(y):
+    """
+    y 可以是：
+      - list of list/np.array，长度 N，每个元素长度 L
+      - np.ndarray，形状 [N, L]
+      - torch.Tensor，形状 [N, L]
+    返回 float32 张量，形状 [N, L]（在 CPU）
+    """
+    if isinstance(y, torch.Tensor):
+        if y.dtype != torch.float32:
+            y = y.float()
+        return y.detach().cpu()
+    elif isinstance(y, np.ndarray):
+        return torch.from_numpy(y.astype(np.float32))
+    elif isinstance(y, list):
+        # 确保是矩阵形状
+        if len(y) == 0:
+            raise ValueError("Empty label list.")
+        # 若元素是 list/array，直接转换
+        return torch.tensor(y, dtype=torch.float32)
+    else:
+        raise TypeError(f"Unsupported type for labels: {type(y)}")
+
+def compute_pos_weight(y, smoothing=1.0, clip_min=1.0, clip_max=10.0,
+                       use_log_compress=True, device=None):
+    """
+    y: [N, L] (list/np/torch) in {0,1}; 会内部转换到 CPU 上进行统计
+    device: 返回的 pos_weight 放到这个设备（如 'cuda' 或 model.device）。None 则留在 CPU。
+    """
+    y = to_label_tensor(y)   # CPU float32 tensor [N, L]
+    N = y.size(0)
+    pos = y.sum(dim=0)       # [L]
+    neg = N - pos            # [L]
+
+    if use_log_compress:
+        ratio = (neg + smoothing) / (pos + smoothing)
+        pw = 1.0 + torch.log(ratio.clamp(min=1e-8))
+    else:
+        pw = (neg + smoothing) / (pos + smoothing)
+
+    # 裁剪
+    if clip_min is not None or clip_max is not None:
+        if clip_min is None: clip_min = float('-inf')
+        if clip_max is None: clip_max = float('inf')
+        pw = pw.clamp(min=clip_min, max=clip_max)
+
+    if device is not None:
+        pw = pw.to(device)
+    return pw  # [L] float tensor
 
 def build_ia_weight_matrix(ia_dict, label_set, enc, label_num):
     """构建IA权重矩阵"""
@@ -319,6 +369,49 @@ def build_ia_weight_matrix(ia_dict, label_set, enc, label_num):
             _value = 1.0
         ia_list[0, ia_id[0]] = _value
     return ia_list
+
+def create_ontology_adjacency_matrix(onto_parent, label_num, key,config):
+    """
+    根据本体父类关系创建邻接矩阵，支持文件缓存
+    
+    参数:
+        onto_parent: 包含每个标签父类位置信息的字典
+        label_num: 标签数量
+        cache_path: 缓存文件路径，如果为None则不使用缓存
+    """
+    cache_path=f"/e/cuiby/paper/cby_code/embeddings_cache/adj_matrix_{key}_{config['run_mode']}.pt"
+    # 如果有缓存文件且存在，则直接加载
+    if cache_path is not None and os.path.exists(cache_path):
+        print(f"Loading adjacency matrix from cache: {cache_path}")
+        try:
+            adj_matrix = torch.load(cache_path)
+            print("Successfully loaded cached adjacency matrix")
+            return adj_matrix
+        except Exception as e:
+            print(f"Failed to load cache: {e}, regenerating...")
+    
+    # 生成新的邻接矩阵
+    print("Generating new adjacency matrix...")
+    adj_matrix = torch.zeros(label_num, label_num).cuda()
+    
+    for i in range(label_num):
+        position = onto_parent[i]['pos'].copy()
+        adj_matrix[i, i] = 1.0  # 自连接
+        for j in position:
+            adj_matrix[i, j] = 1.0  # 父子关系连接
+    
+    sparse_adj_matrix = adj_matrix.to_sparse()
+    
+    # 保存到缓存文件
+    if cache_path is not None:
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        try:
+            torch.save(sparse_adj_matrix, cache_path)
+            print(f"Adjacency matrix saved to cache: {cache_path}")
+        except Exception as e:
+            print(f"Failed to save cache: {e}")
+    
+    return sparse_adj_matrix
 
 def verify_alignment(train_esm_embeddings, train_nlp, train_id, test_esm_embeddings, test_nlp, test_id):
     """验证数据对齐性"""
