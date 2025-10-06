@@ -34,59 +34,6 @@ def create_model_and_optimizer(config, pos_weight=None):
 
     return model, criterion, optimizer, scheduler
 
-
-def train_one_epoch(model, train_dataloader, list_embedding, criterion, optimizer, epoch, 
-                    epoch_num, key):
-    """训练一个epoch"""
-    model.train()
-    loss_mean = 0
-    
-    list_embedding = list_embedding.cuda()  # [num_go_terms, nlp_dim]
-    num_go_terms = list_embedding.shape[0]
-    
-    for batch_idx, batch_data in tqdm(enumerate(train_dataloader), 
-                                    desc=f"Epoch {epoch+1}/{epoch_num} Training",
-                                    total=len(train_dataloader)):
-        optimizer.zero_grad()
-        
-        batch_embeddings = batch_data['embedding'].cuda()  # [batch_size, esm_dim]
-        batch_labels = batch_data['labels'].cuda()  # [batch_size, num_go_terms]
-        batch_size = batch_embeddings.shape[0]
-        
-        # 生成所有样本-GO对
-        # 方法1: 逐个样本处理（内存友好）
-        all_logits = []
-        for i in range(batch_size):
-            # 为第i个样本生成与所有GO的配对
-            esm_repeated = batch_embeddings[i].unsqueeze(0).repeat(num_go_terms, 1)  # [num_go_terms, esm_dim]
-            
-            # 前向传播
-            logits = model(esm_repeated, list_embedding)  # [num_go_terms, 1]
-            all_logits.append(logits.squeeze(-1))  # [num_go_terms]
-        
-        outputs = torch.stack(all_logits, dim=0)  # [batch_size, num_go_terms]
-        
-        # 计算损失
-        loss = criterion(outputs, batch_labels)
-        
-        loss.backward()
-        
-        # 梯度裁剪（可选，防止梯度爆炸）
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-        
-        optimizer.step()
-        
-        loss_mean += loss.item()
-        
-        if (batch_idx + 1) % 100 == 0:
-            print('{}  Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(
-                key, epoch + 1, epoch_num, batch_idx + 1,
-                len(train_dataloader),
-                loss_mean / (batch_idx + 1)))
-    
-    return loss_mean / len(train_dataloader)
-
-
 def train_one_epoch_efficient(model, train_dataloader, list_embedding, criterion, optimizer, 
                               epoch, epoch_num, key):
     """优化版训练 - 使用批量矩阵运算"""
@@ -239,16 +186,7 @@ def train_model_for_ontology(config, key, train_dataloader, test_dataloader,
     best_model_weights = None
     optimizer_model_weights = None
     
-    # 选择训练函数（根据GO数量决定）
-    num_go_terms = list_embedding.shape[0]
-    use_efficient = num_go_terms > 1000  # GO超过1000个时使用高效版本
-    
-    if use_efficient:
-        print(f"Using efficient training mode for {num_go_terms} GO terms")
-        train_fn = train_one_epoch_efficient
-    else:
-        print(f"Using standard training mode for {num_go_terms} GO terms")
-        train_fn = train_one_epoch
+    train_fn = train_one_epoch_efficient
     
     for epoch in range(config['epoch_num']):
         # 训练

@@ -379,6 +379,7 @@ def create_ontology_adjacency_matrix(onto_parent, label_num, key,config):
         label_num: 标签数量
         cache_path: 缓存文件路径，如果为None则不使用缓存
     """
+    # 构建缓存文件路径，包含运行模式标识
     cache_path=f"/e/cuiby/paper/cby_code/embeddings_cache/adj_matrix_{key}_{config['run_mode']}.pt"
     # 如果有缓存文件且存在，则直接加载
     if cache_path is not None and os.path.exists(cache_path):
