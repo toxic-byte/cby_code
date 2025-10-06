@@ -30,13 +30,19 @@ def get_config(run_mode="full", text_mode="def"):
         'obo_path': 'data/Original/go-basic.obo',
         'ia_path': 'data/Original/IA.txt',
         'embed_path': 'FunP/embed',
-        'batch_size_train': 32,
-        'batch_size_test': 64,
+        'batch_size_train':2,
+        'batch_size_test': 2,
         'learning_rate': 1e-4,
         'epoch_num': 200,
         'patience': 10,
         'step_size': 5,
-        'gamma': 0.6
+        'gamma': 0.6,
+        'projection_dim': 256,
+        'dropout': 0.3,
+        'alpha': 0.5,  # 对比学习权重
+        'temperature': 0.07,
+        'hidden_dim':512,
+        'contrastive_type': 'supcon'  # 或 'supcon'
     }
     
     if run_mode == "sample":

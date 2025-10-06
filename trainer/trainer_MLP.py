@@ -46,7 +46,7 @@ def train_one_epoch(model, train_dataloader, criterion, optimizer, epoch, epoch_
         
         batch_embeddings = batch_data['embedding'].cuda()
         batch_labels = batch_data['labels'].cuda()
-        batch_nlp = batch_data['nlp_embedding'].cuda()
+        # batch_nlp = batch_data['nlp_embedding'].cuda()
         
         # 前向传播
         outputs = model(batch_embeddings,mode="train")
@@ -101,7 +101,7 @@ def validate(model, test_dataloader, ia_list, epoch, epoch_num, key):
                                         total=len(test_dataloader)):
             batch_embeddings = batch_data['embedding'].cuda()
             batch_labels = batch_data['labels']
-            batch_nlp = batch_data['nlp_embedding'].cuda()
+            # batch_nlp = batch_data['nlp_embedding'].cuda()
             
             output = model(batch_embeddings, mode='test')
             

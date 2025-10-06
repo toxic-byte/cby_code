@@ -79,10 +79,14 @@ def analyze_embeddings_file(file_path):
                             
                             # 显示一些样本信息
                             print(f"\n其他样本信息:")
+                            if 'top_list' in data:
+                                sample_ids = data['top_list']
+                                print(f"前5个样本ID: {sample_ids[:5] if len(sample_ids) > 5 else sample_ids}")
+                            
                             if 'sample_ids' in data:
                                 sample_ids = data['sample_ids']
                                 print(f"前5个样本ID: {sample_ids[:5] if len(sample_ids) > 5 else sample_ids}")
-                            
+
                             if 'embedding_dim' in data:
                                 print(f"嵌入维度: {data['embedding_dim']}")
                             
@@ -107,9 +111,10 @@ def analyze_embeddings_file(file_path):
 
 # 文件路径
 # file_path = "/e/cuiby/paper/cby_code/embeddings_cache/nlp/train_nlp_embeddings_biological_process_def.pkl"
-file_path = "/e/cuiby/paper/cby_code/embeddings_cache/nlp/train_nlp_embeddings_biological_process_name.pkl"
+# file_path = "/e/cuiby/paper/cby_code/embeddings_cache/nlp/train_nlp_embeddings_biological_process_name.pkl"
 # file_path = "/e/cuiby/paper/cby_code/embeddings_cache/nlp/train_nlp_embeddings_molecular_function_name.pkl"
 # file_path = "/e/cuiby/paper/cby_code/embeddings_cache/nlp/train_nlp_embeddings_cellular_component_name.pkl"
+file_path = "/e/cuiby/paper/cby_code/embeddings_cache/description/train_nlp_embeddings_biological_process_name_sample.pkl"
 
 # 分析文件
 result = analyze_embeddings_file(file_path)

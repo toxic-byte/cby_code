@@ -90,6 +90,7 @@ def load_nlp_model(nlp_path):
     nlp_model.eval()
     return nlp_tokenizer, nlp_model
 
+#对每一个蛋白质生成文本描述向量
 def nlp_embedding(nlp_model, sample_ids, label_list, key, top_list, cache_path=None, onto=None, pooling='mean', name_flag="name"):
     """
     生成或加载NLP文本嵌入
@@ -267,6 +268,7 @@ def compute_nlp_embeddings(config, nlp_model, key, train_id, test_id, training_l
     
     return train_nlp, test_nlp
 
+#测试集也加上文本向量
 def compute_nlp_embeddings_with_test(config, nlp_model, key, train_id, test_id, training_labels,test_labels, label_list, onto):
     """计算NLP embeddings"""
     if config['run_mode'] == "sample":
@@ -303,3 +305,149 @@ def compute_nlp_embeddings_with_test(config, nlp_model, key, train_id, test_id, 
 
     
     return train_nlp, test_nlp
+
+
+def list_embedding(nlp_model, key, top_list, cache_path=None, onto=None, pooling='mean', name_flag="name"):
+    """
+    生成或加载NLP文本嵌入(为top_list中的每个标签生成向量)
+    
+    参数:
+        nlp_model: BiomedBERT模型
+        key: GO命名空间 (biological_process, molecular_function, cellular_component)
+        top_list: 高频标签列表
+        cache_path: 缓存文件路径,如果提供则尝试加载/保存
+        onto: GO本体对象
+        pooling: 池化方式 ('mean', 'max', 'cls')
+        name_flag: 使用GO的名称("name")或定义("def")
+    
+    返回:
+        embeddings: 所有top_list标签的向量 [len(top_list), nlp_dim]
+    """
+    # 如果提供了缓存路径且文件存在,直接加载
+    if cache_path and os.path.exists(cache_path):
+        print(f"Loading NLP embeddings from cache: {cache_path}")
+        with open(cache_path, 'rb') as f:
+            cached_data = pickle.load(f)
+        
+        # 验证缓存数据
+        if (cached_data.get('pooling') == pooling and 
+            cached_data.get('key') == key and
+            cached_data.get('top_list') == top_list):
+            print(f"Cache loaded successfully. Shape: {cached_data['embeddings'].shape}")
+            return cached_data['embeddings']
+        else:
+            print("Warning: Cache mismatch. Regenerating embeddings...")
+    
+    # 生成新的嵌入
+    print(f"Generating NLP embeddings for {len(top_list)} GO terms")
+    print(f"Ontology namespace: {key}")
+    print(f"Pooling method: {pooling}")
+    print(f"Using GO {name_flag}s as context")
+    
+    all_embeddings = []
+    
+    for _tag in tqdm(top_list, desc="Processing GO terms"):
+        context = ''
+        
+        # 查找该标签的文本描述
+        for ont in onto:
+            if ont.namespace != key:
+                continue
+            
+            _tag_with_prefix = 'GO:' + _tag if not _tag.startswith('GO:') else _tag
+            
+            if _tag_with_prefix in ont.terms_dict.keys():
+                if name_flag == "name":
+                    context = ont.terms_dict[_tag_with_prefix]['name']
+                elif name_flag == "def":
+                    tag_context = ont.terms_dict[_tag_with_prefix]['def']
+                    tag_contents = re.findall(r'"(.*?)"', tag_context)
+                    if tag_contents:
+                        context = tag_contents[0]
+                break
+        
+        # 如果没有找到上下文,使用零向量
+        if context == '':
+            print(f"Warning: No context found for {_tag}, using zero vector...")
+            all_embeddings.append(torch.zeros(nlp_dim).cuda())
+            continue
+        
+        # 分段处理长文本
+        seq_len = 512
+        max_len = MAXLEN // 2
+        if len(context) > max_len:
+            context = context[:max_len]
+        
+        num_seqs = len(context) // seq_len + (1 if len(context) % seq_len != 0 else 0)
+        last_embed = []
+        
+        with torch.no_grad():
+            for i in range(num_seqs):
+                start_index = i * seq_len
+                end_index = min((i + 1) * seq_len, len(context))
+                context_sample = context[start_index:end_index]
+                inputs = nlp_tokenizer(context_sample, return_tensors="pt")
+                inputs = {k: v.cuda() for k, v in inputs.items()}
+                outputs = nlp_model(**inputs)
+                last_hidden_states = outputs.last_hidden_state.squeeze(0).detach()
+                last_embed.append(last_hidden_states)
+        
+        # 合并所有段落的embeddings
+        embed = torch.cat(last_embed, dim=0)  # [total_seq_len, nlp_dim]
+        
+        # 应用池化
+        if pooling == 'mean':
+            pooled_embed = embed.mean(dim=0)  # [nlp_dim]
+        elif pooling == 'max':
+            pooled_embed = embed.max(dim=0)[0]  # [nlp_dim]
+        elif pooling == 'cls':
+            pooled_embed = embed[0]  # [nlp_dim]
+        else:
+            raise ValueError(f"Unknown pooling method: {pooling}")
+        
+        all_embeddings.append(pooled_embed)
+    
+    # 堆叠所有向量
+    embeddings = torch.stack(all_embeddings)  # [len(top_list), nlp_dim]
+    
+    print(f"NLP embedding generation completed.")
+    print(f"Embedding shape: {embeddings.shape}")
+    
+    # 保存到缓存
+    if cache_path:
+        print(f"Saving NLP embeddings to cache: {cache_path}")
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        cache_data = {
+            'top_list': top_list,
+            'embeddings': embeddings,
+            'key': key,
+            'num_terms': len(top_list),
+            'pooling': pooling,
+            'embedding_dim': nlp_dim,
+            'name_flag': name_flag
+        }
+        with open(cache_path, 'wb') as f:
+            pickle.dump(cache_data, f)
+        print(f"Cache saved successfully.")
+    
+    return embeddings
+
+def compute_nlp_embeddings_list(config, nlp_model, key, label_list, onto):
+    """计算NLP embeddings"""
+    if config['run_mode'] == "sample":
+        list_nlp_cache = os.path.join(config['cache_dir'], f"description/train_nlp_embeddings_{key}_{config['text_mode']}_sample.pkl")
+    elif config['run_mode'] == "full":
+        list_nlp_cache = os.path.join(config['cache_dir'], f"description/train_nlp_embeddings_{key}_{config['text_mode']}.pkl")
+    
+    print(f"\n--- Processing Train NLP Embeddings for {key} ---")
+    embeddings  = list_embedding(
+        nlp_model, 
+        key, 
+        label_list,
+        cache_path=list_nlp_cache,
+        onto=onto,
+        pooling='mean',
+        name_flag=config['text_mode']
+    )
+
+    return embeddings 

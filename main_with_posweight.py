@@ -9,11 +9,13 @@ import sys
 sys.path.append(r"utils")
 sys.path.append(r"models")
 sys.path.append(r"trainer")
-from dataset import obo_graph,load_datasets,verify_alignment,process_labels_for_ontology,create_dataloaders,compute_pos_weight
+from dataset import obo_graph,load_datasets,verify_alignment,process_labels_for_ontology,create_dataloaders,compute_pos_weight,create_ontology_adjacency_matrix
 from config import setup_environment, get_config
 from embed import load_nlp_model,compute_esm_embeddings,compute_nlp_embeddings
-from trainer_MLP import train_model_for_ontology,save_results
+# from trainer_MLP import train_model_for_ontology,save_results
 # from trainer_text_modify import train_model_for_ontology,save_results
+from trainer_GCN import train_model_for_ontology,save_results
+
 
 
 def main():
@@ -58,6 +60,11 @@ def main():
         # 处理标签
         label_list, training_labels_binary, test_labels_binary, enc, ia_list, onto_parent, label_num = process_labels_for_ontology(
             config, key, label_space, training_labels, test_labels, onto, enc, ia_dict)
+        
+        #获得邻接矩阵
+        adj_matrix=create_ontology_adjacency_matrix(onto_parent,label_num,key,config)
+
+        #处理正负样本权重
         pos_weight= compute_pos_weight(training_labels_binary).cuda()
         print("------------------------------pos_weight",pos_weight.shape)
         print("------------------------------pos_weight",pos_weight)
@@ -77,7 +84,7 @@ def main():
         
         # 训练模型
         model = train_model_for_ontology(
-            config, key, train_dataloader, test_dataloader, label_num, ia_list, ctime, metrics_output_test,pos_weight)
+            config, key, train_dataloader, test_dataloader, label_num, ia_list, ctime, metrics_output_test,adj_matrix,pos_weight)
     
     # 保存结果
     save_results(config, metrics_output_test, seed, ctime)

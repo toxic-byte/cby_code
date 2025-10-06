@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 from models.MLP_with_adajaceny import CustomModel
 
-def create_model_and_optimizer(config, label_num,adj_matrix):
+def create_model_and_optimizer(config, label_num,adj_matrix,pos_weight):
     """创建模型、损失函数和优化器"""
     model = CustomModel(
         config['embed_dim'], 
@@ -14,7 +14,7 @@ def create_model_and_optimizer(config, label_num,adj_matrix):
         adj_matrix
     ).cuda()
     
-    criterion = nn.BCEWithLogitsLoss()
+    criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
     scheduler = torch.optim.lr_scheduler.StepLR(
         optimizer, 
@@ -22,7 +22,7 @@ def create_model_and_optimizer(config, label_num,adj_matrix):
         gamma=config['gamma']
     )
 
-        # 检查哪些参数会被训练
+    # 检查哪些参数会被训练
     print("Trainable parameters:")
     for name, param in model.named_parameters():
         if param.requires_grad:
@@ -167,9 +167,9 @@ class EarlyStopping:
             self.best_score = score
             self.counter = 0
 
-def train_model_for_ontology(config, key, train_dataloader, test_dataloader, label_num, ia_list, ctime, metrics_output_test,adj_matrix):
+def train_model_for_ontology(config, key, train_dataloader, test_dataloader, label_num, ia_list, ctime, metrics_output_test,adj_matrix,pos_weight):
     """为特定本体训练模型"""
-    model, criterion, optimizer, scheduler = create_model_and_optimizer(config, label_num,adj_matrix)
+    model, criterion, optimizer, scheduler = create_model_and_optimizer(config, label_num,adj_matrix,pos_weight)
     early_stopping = EarlyStopping(patience=config['patience'], verbose=True)
     
     if key not in metrics_output_test:
