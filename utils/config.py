@@ -32,16 +32,17 @@ def get_config(run_mode="full", text_mode="def"):
         'embed_path': 'FunP/embed',
         'batch_size_train':32,
         'batch_size_test': 64,
-        'learning_rate': 1e-4,
+        'learning_rate': 5e-4,
         'epoch_num': 200,
-        'patience': 10,
-        'step_size': 5,
+        'patience': 15,
+        'step_size': 10,
         'gamma': 0.6,
         'projection_dim': 256,
         'dropout': 0.3,
         'alpha': 0.5,  # 对比学习权重
         'temperature': 0.07,
         'hidden_dim':512,
+        'weight_decay':0.01,
         'contrastive_type': 'supcon'  # 或 'supcon'
     }
     

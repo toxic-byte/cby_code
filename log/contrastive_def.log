@@ -1,0 +1,83 @@
+nohup: 忽略输入
+Start running date:20251008013823
+Loading datasets...
+Start reading data/sampled/cafa5_train_100.txt
+Read input complete
+Start reading data/sampled/cafa5_test_100.txt
+Read input complete
+Train IDs (first 5): ['Q8BX51', 'Q00711', 'Q97PR0', 'P19624', 'Q9ULX5']
+Test IDs (first 5): ['Q6FG55', 'Q8TBH0', 'Q700C2', 'Q833J1', 'Q15760']
+Total train samples: 128020, Total test samples: 14225
+Computing ESM embeddings...
+Loading cached ESM embeddings from embeddings_cache/esm/train_esm_embeddings_mean.pkl
+Loading cached ESM embeddings from embeddings_cache/esm/test_esm_embeddings_mean.pkl
+
+==================================================
+Training for ontology: biological_process
+==================================================
+
+==================================================
+Processing labels for ontology: biological_process
+==================================================
+Loading preprocessed labels for biological_process from cache...
+Loading adjacency matrix from cache: /e/cuiby/paper/cby_code/embeddings_cache/adj/adj_matrix_biological_process_full.pt
+Successfully loaded cached adjacency matrix
+
+--- Processing Train NLP Embeddings for biological_process ---
+Loading NLP embeddings from cache: embeddings_cache/description/train_nlp_embeddings_biological_process_def.pkl
+Cache loaded successfully. Shape: torch.Size([7644, 768])
+Epoch [1/100], Loss: 8.8550, Temperature: 12.7133, LR: 0.000100
+Epoch [2/100], Loss: 8.8361, Temperature: 11.3722, LR: 0.000100
+Epoch [3/100], Loss: 8.8228, Temperature: 10.1713, LR: 0.000100
+Epoch [4/100], Loss: 8.8088, Temperature: 9.0948, LR: 0.000100
+Epoch [5/100], Loss: 8.7932, Temperature: 8.1347, LR: 0.000099
+Epoch [6/100], Loss: 8.7759, Temperature: 7.2791, LR: 0.000099
+Epoch [7/100], Loss: 8.7568, Temperature: 6.5171, LR: 0.000099
+Epoch [8/100], Loss: 8.7358, Temperature: 5.8395, LR: 0.000098
+Epoch [9/100], Loss: 8.7127, Temperature: 5.2360, LR: 0.000098
+Epoch [10/100], Loss: 8.6872, Temperature: 4.6999, LR: 0.000098
+Epoch [11/100], Loss: 8.6595, Temperature: 4.2225, LR: 0.000097
+Epoch [12/100], Loss: 8.6291, Temperature: 3.7958, LR: 0.000097
+Epoch [13/100], Loss: 8.5959, Temperature: 3.4165, LR: 0.000096
+Epoch [14/100], Loss: 8.5596, Temperature: 3.0811, LR: 0.000095
+Epoch [15/100], Loss: 8.5205, Temperature: 2.7793, LR: 0.000095
+Epoch [16/100], Loss: 8.4778, Temperature: 2.5092, LR: 0.000094
+Epoch [17/100], Loss: 8.4317, Temperature: 2.2661, LR: 0.000093
+Epoch [18/100], Loss: 8.3822, Temperature: 2.0504, LR: 0.000092
+Epoch [19/100], Loss: 8.3280, Temperature: 1.8573, LR: 0.000091
+Epoch [20/100], Loss: 8.2702, Temperature: 1.6846, LR: 0.000091
+Epoch [21/100], Loss: 8.2085, Temperature: 1.5295, LR: 0.000090
+Epoch [22/100], Loss: 8.1436, Temperature: 1.3907, LR: 0.000089
+Epoch [23/100], Loss: 8.0768, Temperature: 1.2682, LR: 0.000088
+Epoch [24/100], Loss: 8.0067, Temperature: 1.1601, LR: 0.000087
+Epoch [25/100], Loss: 7.9360, Temperature: 1.0641, LR: 0.000086
+Epoch [26/100], Loss: 7.8658, Temperature: 0.9799, LR: 0.000084
+Epoch [27/100], Loss: 7.7948, Temperature: 0.9031, LR: 0.000083
+Epoch [28/100], Loss: 7.7218, Temperature: 0.8337, LR: 0.000082
+Epoch [29/100], Loss: 7.6491, Temperature: 0.7706, LR: 0.000081
+Epoch [30/100], Loss: 7.5765, Temperature: 0.7136, LR: 0.000080
+Epoch [31/100], Loss: 7.5031, Temperature: 0.6621, LR: 0.000078
+Epoch [32/100], Loss: 7.4320, Temperature: 0.6158, LR: 0.000077
+Epoch [33/100], Loss: 7.3596, Temperature: 0.5733, LR: 0.000076
+Epoch [34/100], Loss: 7.2850, Temperature: 0.5347, LR: 0.000074
+Epoch [35/100], Loss: 7.2151, Temperature: 0.4999, LR: 0.000073
+Epoch [36/100], Loss: 7.1494, Temperature: 0.4682, LR: 0.000072
+Epoch [37/100], Loss: 7.0880, Temperature: 0.4396, LR: 0.000070
+Epoch [38/100], Loss: 7.0309, Temperature: 0.4136, LR: 0.000069
+Epoch [39/100], Loss: 6.9781, Temperature: 0.3901, LR: 0.000067
+Epoch [40/100], Loss: 6.9298, Temperature: 0.3688, LR: 0.000066
+Epoch [41/100], Loss: 6.8745, Temperature: 0.3483, LR: 0.000064
+Epoch [42/100], Loss: 6.8200, Temperature: 0.3294, LR: 0.000063
+Epoch [43/100], Loss: 6.7705, Temperature: 0.3123, LR: 0.000061
+Epoch [44/100], Loss: 6.7280, Temperature: 0.2967, LR: 0.000060
+Epoch [45/100], Loss: 6.6882, Temperature: 0.2826, LR: 0.000058
+Epoch [46/100], Loss: 6.6533, Temperature: 0.2697, LR: 0.000057
+Epoch [47/100], Loss: 6.6199, Temperature: 0.2578, LR: 0.000055
+Epoch [48/100], Loss: 6.5918, Temperature: 0.2469, LR: 0.000054
+Epoch [49/100], Loss: 6.5657, Temperature: 0.2369, LR: 0.000052
+Epoch [50/100], Loss: 6.5419, Temperature: 0.2276, LR: 0.000051
+Epoch [51/100], Loss: 6.5175, Temperature: 0.2189, LR: 0.000049
+Epoch [52/100], Loss: 6.4973, Temperature: 0.2108, LR: 0.000047
+Epoch [53/100], Loss: 6.4774, Temperature: 0.2034, LR: 0.000046
+Epoch [54/100], Loss: 6.4591, Temperature: 0.1964, LR: 0.000044
+Epoch [55/100], Loss: 6.4407, Temperature: 0.1898, LR: 0.000043
